@@ -1,16 +1,16 @@
 import {jest} from '@jest/globals';
-import UserRepository from '../../../Domains/users/UserRepository.js';
 import AuthenticationRepository from '../../../Domains/authentications/AuthenticationRepository.js';
+import NewAuth from '../../../Domains/authentications/entities/NewAuth.js';
+import UserRepository from '../../../Domains/users/UserRepository.js';
 import AuthenticationTokenManager from '../../security/AuthenticationTokenManager.js';
 import PasswordHash from '../../security/PasswordHash.js';
 import LoginUserUseCase from '../LoginUserUseCase.js';
-import NewAuth from '../../../Domains/authentications/entities/NewAuth.js';
 
 describe('GetAuthenticationUseCase', () => {
   it('should orchestrating the get authentication action correctly', async () => {
     // Arrange
     const useCasePayload = {
-      username: 'dicoding',
+      username: 'monne',
       password: 'secret',
     };
 
@@ -60,11 +60,11 @@ describe('GetAuthenticationUseCase', () => {
       }),
     );
 
-    expect(mockUserRepository.getPasswordByUsername).toBeCalledWith('dicoding');
+    expect(mockUserRepository.getPasswordByUsername).toBeCalledWith('monne');
     expect(mockPasswordHash.comparePassword).toBeCalledWith('secret', 'encrypted_password');
-    expect(mockUserRepository.getIdByUsername).toBeCalledWith('dicoding');
-    expect(mockAuthenticationTokenManager.createAccessToken).toBeCalledWith({username: 'dicoding', id: 'user-123'});
-    expect(mockAuthenticationTokenManager.createRefreshToken).toBeCalledWith({username: 'dicoding', id: 'user-123'});
+    expect(mockUserRepository.getIdByUsername).toBeCalledWith('monne');
+    expect(mockAuthenticationTokenManager.createAccessToken).toBeCalledWith({username: 'monne', id: 'user-123'});
+    expect(mockAuthenticationTokenManager.createRefreshToken).toBeCalledWith({username: 'monne', id: 'user-123'});
     expect(mockAuthenticationRepository.addToken).toBeCalledWith(mockedAuthentication.refreshToken);
   });
 });

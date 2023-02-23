@@ -3,20 +3,20 @@
 import {createContainer} from 'instances-container';
 
 // external agency
-import {nanoid} from 'nanoid';
 import Jwt from '@hapi/jwt';
 import bcrypt from 'bcrypt';
+import {nanoid} from 'nanoid';
 import pool from './database/postgres/pool.js';
 
 // service (repository, helper, manager, etc)
-import AuthenticationRepository from '../Domains/authentications/AuthenticationRepository.js';
-import AuthenticationRepositoryPostgres from './repository/AuthenticationRepositoryPostgres.js';
 import AuthenticationTokenManager from '../Applications/security/AuthenticationTokenManager.js';
+import PasswordHash from '../Applications/security/PasswordHash.js';
+import AuthenticationRepository from '../Domains/authentications/AuthenticationRepository.js';
+import UserRepository from '../Domains/users/UserRepository.js';
+import AuthenticationRepositoryPostgres from './repository/AuthenticationRepositoryPostgres.js';
+import UserRepositoryPostgres from './repository/UserRepositoryPostgres.js';
 import BcryptPasswordHash from './security/BcryptPasswordHash.js';
 import JwtTokenManager from './security/JwtTokenManager.js';
-import PasswordHash from '../Applications/security/PasswordHash.js';
-import UserRepository from '../Domains/users/UserRepository.js';
-import UserRepositoryPostgres from './repository/UserRepositoryPostgres.js';
 
 // use case
 import AddUserUseCase from '../Applications/use_case/AddUserUseCase.js';

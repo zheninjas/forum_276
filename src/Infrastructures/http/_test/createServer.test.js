@@ -18,8 +18,8 @@ describe('HTTP server', () => {
   it('should handle server error correctly', async () => {
     // Arrange
     const requestPayload = {
-      username: 'dicoding',
-      fullname: 'Dicoding Indonesia',
+      username: 'monne',
+      fullname: 'Itte Monne',
       password: 'super_secret',
     };
 

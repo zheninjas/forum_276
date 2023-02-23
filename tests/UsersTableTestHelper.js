@@ -2,7 +2,7 @@
 import pool from '../src/Infrastructures/database/postgres/pool';
 
 const UsersTableTestHelper = {
-  async addUser({id = 'user-123', username = 'dicoding', password = 'secret', fullname = 'Dicoding Indonesia'}) {
+  async addUser({id = 'user-123', username = 'monne', password = 'secret', fullname = 'Itte Monne'}) {
     const query = {
       text: 'INSERT INTO users VALUES($1, $2, $3, $4)',
       values: [id, username, password, fullname],

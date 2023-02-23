@@ -1,5 +1,5 @@
-import {jest} from '@jest/globals';
 import Jwt from '@hapi/jwt';
+import {jest} from '@jest/globals';
 import InvariantError from '../../../Commons/exceptions/InvariantError.js';
 import JwtTokenManager from '../JwtTokenManager.js';
 
@@ -8,7 +8,7 @@ describe('JwtTokenManager', () => {
     it('should create accessToken correctly', async () => {
       // Arrange
       const payload = {
-        username: 'dicoding',
+        username: 'monne',
       };
 
       const mockJwtToken = {
@@ -30,7 +30,7 @@ describe('JwtTokenManager', () => {
     it('should create refreshToken correctly', async () => {
       // Arrange
       const payload = {
-        username: 'dicoding',
+        username: 'monne',
       };
 
       const mockJwtToken = {
@@ -52,7 +52,7 @@ describe('JwtTokenManager', () => {
     it('should throw InvariantError when verification failed', async () => {
       // Arrange
       const jwtTokenManager = new JwtTokenManager(Jwt.token);
-      const accessToken = await jwtTokenManager.createAccessToken({username: 'dicoding'});
+      const accessToken = await jwtTokenManager.createAccessToken({username: 'monne'});
 
       // Action & Assert
       await expect(jwtTokenManager.verifyRefreshToken(accessToken)).rejects.toThrow(InvariantError);
@@ -61,7 +61,7 @@ describe('JwtTokenManager', () => {
     it('should not throw InvariantError when refresh token verified', async () => {
       // Arrange
       const jwtTokenManager = new JwtTokenManager(Jwt.token);
-      const refreshToken = await jwtTokenManager.createRefreshToken({username: 'dicoding'});
+      const refreshToken = await jwtTokenManager.createRefreshToken({username: 'monne'});
 
       // Action & Assert
       await expect(jwtTokenManager.verifyRefreshToken(refreshToken)).resolves.not.toThrow(InvariantError);
@@ -72,13 +72,13 @@ describe('JwtTokenManager', () => {
     it('should decode payload correctly', async () => {
       // Arrange
       const jwtTokenManager = new JwtTokenManager(Jwt.token);
-      const accessToken = await jwtTokenManager.createAccessToken({username: 'dicoding'});
+      const accessToken = await jwtTokenManager.createAccessToken({username: 'monne'});
 
       // Action
       const {username: expectedUsername} = await jwtTokenManager.decodePayload(accessToken);
 
       // Action & Assert
-      expect(expectedUsername).toEqual('dicoding');
+      expect(expectedUsername).toEqual('monne');
     });
   });
 });

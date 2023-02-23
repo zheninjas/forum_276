@@ -1,5 +1,5 @@
-import ClientError from '../ClientError.js';
 import AuthorizationError from '../AuthorizationError.js';
+import ClientError from '../ClientError.js';
 
 describe('AuthorizationError', () => {
   it('should create AuthorizationError correctly', () => {

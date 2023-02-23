@@ -1,5 +1,5 @@
-import InvariantError from '../../../Commons/exceptions/InvariantError.js';
 import AuthenticationsTableTestHelper from '../../../../tests/AuthenticationsTableTestHelper.js';
+import InvariantError from '../../../Commons/exceptions/InvariantError.js';
 import pool from '../../database/postgres/pool.js';
 import AuthenticationRepositoryPostgres from '../AuthenticationRepositoryPostgres.js';
 
@@ -56,6 +56,7 @@ describe('AuthenticationRepository postgres', () => {
       // Arrange
       const authenticationRepository = new AuthenticationRepositoryPostgres(pool);
       const token = 'token';
+
       await AuthenticationsTableTestHelper.addToken(token);
 
       // Action

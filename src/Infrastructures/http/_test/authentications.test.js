@@ -1,9 +1,9 @@
-import pool from '../../database/postgres/pool.js';
-import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
 import AuthenticationsTableTestHelper from '../../../../tests/AuthenticationsTableTestHelper.js';
-import container from '../../container.js';
-import createServer from '../createServer.js';
+import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
 import AuthenticationTokenManager from '../../../Applications/security/AuthenticationTokenManager.js';
+import container from '../../container.js';
+import pool from '../../database/postgres/pool.js';
+import createServer from '../createServer.js';
 
 describe('/authentications endpoint', () => {
   afterAll(async () => {
@@ -19,7 +19,7 @@ describe('/authentications endpoint', () => {
     it('should response 201 and new authentication', async () => {
       // Arrange
       const requestPayload = {
-        username: 'dicoding',
+        username: 'monne',
         password: 'secret',
       };
 
@@ -30,9 +30,9 @@ describe('/authentications endpoint', () => {
         method: 'POST',
         url: '/users',
         payload: {
-          username: 'dicoding',
+          username: 'monne',
           password: 'secret',
-          fullname: 'Dicoding Indonesia',
+          fullname: 'Itte Monne',
         },
       });
 
@@ -55,7 +55,7 @@ describe('/authentications endpoint', () => {
     it('should response 400 if username not found', async () => {
       // Arrange
       const requestPayload = {
-        username: 'dicoding',
+        username: 'monne',
         password: 'secret',
       };
 
@@ -79,7 +79,7 @@ describe('/authentications endpoint', () => {
     it('should response 401 if password wrong', async () => {
       // Arrange
       const requestPayload = {
-        username: 'dicoding',
+        username: 'monne',
         password: 'wrong_password',
       };
 
@@ -90,9 +90,9 @@ describe('/authentications endpoint', () => {
         method: 'POST',
         url: '/users',
         payload: {
-          username: 'dicoding',
+          username: 'monne',
           password: 'secret',
-          fullname: 'Dicoding Indonesia',
+          fullname: 'Itte Monne',
         },
       });
 
@@ -114,7 +114,7 @@ describe('/authentications endpoint', () => {
     it('should response 400 if login payload not contain needed property', async () => {
       // Arrange
       const requestPayload = {
-        username: 'dicoding',
+        username: 'monne',
       };
 
       const server = await createServer(container);
@@ -169,9 +169,9 @@ describe('/authentications endpoint', () => {
         method: 'POST',
         url: '/users',
         payload: {
-          username: 'dicoding',
+          username: 'monne',
           password: 'secret',
-          fullname: 'Dicoding Indonesia',
+          fullname: 'Itte Monne',
         },
       });
 
@@ -180,7 +180,7 @@ describe('/authentications endpoint', () => {
         method: 'POST',
         url: '/authentications',
         payload: {
-          username: 'dicoding',
+          username: 'monne',
           password: 'secret',
         },
       });
@@ -269,7 +269,7 @@ describe('/authentications endpoint', () => {
       const server = await createServer(container);
       const refreshToken = await container
         .getInstance(AuthenticationTokenManager.name)
-        .createRefreshToken({username: 'dicoding'});
+        .createRefreshToken({username: 'monne'});
 
       // Action
       const response = await server.inject({

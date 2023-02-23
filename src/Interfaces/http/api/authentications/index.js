@@ -1,5 +1,5 @@
-import routes from './routes.js';
 import AuthenticationsHandler from './handler.js';
+import routes from './routes.js';
 
 export default {
   name: 'authentications',

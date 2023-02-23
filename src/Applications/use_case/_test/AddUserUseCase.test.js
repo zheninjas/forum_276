@@ -1,20 +1,17 @@
 import {jest} from '@jest/globals';
-import RegisterUser from '../../../Domains/users/entities/RegisterUser.js';
 import RegisteredUser from '../../../Domains/users/entities/RegisteredUser.js';
+import RegisterUser from '../../../Domains/users/entities/RegisterUser.js';
 import UserRepository from '../../../Domains/users/UserRepository.js';
 import PasswordHash from '../../security/PasswordHash.js';
 import AddUserUseCase from '../AddUserUseCase.js';
 
 describe('AddUserUseCase', () => {
-  /**
-   * Menguji apakah use case mampu mengoskestrasikan langkah demi langkah dengan benar.
-   */
   it('should orchestrating the add user action correctly', async () => {
     // Arrange
     const useCasePayload = {
-      username: 'dicoding',
+      username: 'monne',
       password: 'secret',
-      fullname: 'Dicoding Indonesia',
+      fullname: 'Itte Monne',
     };
 
     const mockRegisteredUser = new RegisteredUser({
@@ -23,16 +20,13 @@ describe('AddUserUseCase', () => {
       fullname: useCasePayload.fullname,
     });
 
-    /** creating dependency of use case */
     const mockUserRepository = new UserRepository();
     const mockPasswordHash = new PasswordHash();
 
-    /** mocking needed function */
     mockUserRepository.verifyAvailableUsername = jest.fn().mockImplementation(() => Promise.resolve());
     mockPasswordHash.hash = jest.fn().mockImplementation(() => Promise.resolve('encrypted_password'));
     mockUserRepository.addUser = jest.fn().mockImplementation(() => Promise.resolve(mockRegisteredUser));
 
-    /** creating use case instance */
     const getUserUseCase = new AddUserUseCase({
       userRepository: mockUserRepository,
       passwordHash: mockPasswordHash,

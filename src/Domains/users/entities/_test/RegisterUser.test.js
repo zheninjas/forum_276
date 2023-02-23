@@ -27,8 +27,8 @@ describe('a RegisterUser entities', () => {
   it('should throw error when username contains more than 50 character', () => {
     // Arrange
     const payload = {
-      username: 'dicodingindonesiadicodingindonesiadicodingindonesiadicoding',
-      fullname: 'Dicoding Indonesia',
+      username: 'SuperDuperExtraUltraLongUsernameTextWithMoreThan50Character',
+      fullname: 'Itte Monne',
       password: 'abc',
     };
 
@@ -39,8 +39,8 @@ describe('a RegisterUser entities', () => {
   it('should throw error when username contains restricted character', () => {
     // Arrange
     const payload = {
-      username: 'dico ding',
-      fullname: 'dicoding',
+      username: 'mon ne',
+      fullname: 'monne',
       password: 'abc',
     };
 
@@ -51,8 +51,8 @@ describe('a RegisterUser entities', () => {
   it('should create registerUser object correctly', () => {
     // Arrange
     const payload = {
-      username: 'dicoding',
-      fullname: 'Dicoding Indonesia',
+      username: 'monne',
+      fullname: 'Itte Monne',
       password: 'abc',
     };
 

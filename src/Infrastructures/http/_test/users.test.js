@@ -1,6 +1,6 @@
 import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
-import pool from '../../database/postgres/pool.js';
 import container from '../../container.js';
+import pool from '../../database/postgres/pool.js';
 import createServer from '../createServer.js';
 
 describe('/users endpoint', () => {
@@ -16,9 +16,9 @@ describe('/users endpoint', () => {
     it('should response 201 and persisted user', async () => {
       // Arrange
       const requestPayload = {
-        username: 'dicoding',
+        username: 'monne',
         password: 'secret',
-        fullname: 'Dicoding Indonesia',
+        fullname: 'Itte Monne',
       };
 
       const server = await createServer(container);
@@ -41,7 +41,7 @@ describe('/users endpoint', () => {
     it('should response 400 when request payload not contain needed property', async () => {
       // Arrange
       const requestPayload = {
-        fullname: 'Dicoding Indonesia',
+        fullname: 'Itte Monne',
         password: 'secret',
       };
 
@@ -65,9 +65,9 @@ describe('/users endpoint', () => {
     it('should response 400 when request payload not meet data type specification', async () => {
       // Arrange
       const requestPayload = {
-        username: 'dicoding',
+        username: 'monne',
         password: 'secret',
-        fullname: ['Dicoding Indonesia'],
+        fullname: ['Itte Monne'],
       };
 
       const server = await createServer(container);
@@ -90,9 +90,9 @@ describe('/users endpoint', () => {
     it('should response 400 when username more than 50 character', async () => {
       // Arrange
       const requestPayload = {
-        username: 'dicodingindonesiadicodingindonesiadicodingindonesiadicoding',
+        username: 'SuperDuperExtraUltraLongUsernameTextWithMoreThan50Character',
         password: 'secret',
-        fullname: 'Dicoding Indonesia',
+        fullname: 'Itte Monne',
       };
 
       const server = await createServer(container);
@@ -117,9 +117,9 @@ describe('/users endpoint', () => {
     it('should response 400 when username contain restricted character', async () => {
       // Arrange
       const requestPayload = {
-        username: 'dicoding indonesia',
+        username: 'monne indonesia',
         password: 'secret',
-        fullname: 'Dicoding Indonesia',
+        fullname: 'Itte Monne',
       };
 
       const server = await createServer(container);
@@ -143,11 +143,11 @@ describe('/users endpoint', () => {
 
     it('should response 400 when username unavailable', async () => {
       // Arrange
-      await UsersTableTestHelper.addUser({username: 'dicoding'});
+      await UsersTableTestHelper.addUser({username: 'monne'});
 
       const requestPayload = {
-        username: 'dicoding',
-        fullname: 'Dicoding Indonesia',
+        username: 'monne',
+        fullname: 'Itte Monne',
         password: 'super_secret',
       };
 
