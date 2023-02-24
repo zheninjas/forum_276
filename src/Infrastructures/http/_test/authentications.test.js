@@ -18,22 +18,22 @@ describe('/authentications endpoint', () => {
   describe('when POST /authentications', () => {
     it('should response 201 and new authentication', async () => {
       // Arrange
+      const username = 'monne';
+      const password = 'secret';
+      const fullname = 'Itte Monne';
+
       const requestPayload = {
-        username: 'monne',
-        password: 'secret',
+        username,
+        password,
       };
 
       const server = await createServer(container);
 
-      // add user
+      // Add user
       await server.inject({
         method: 'POST',
         url: '/users',
-        payload: {
-          username: 'monne',
-          password: 'secret',
-          fullname: 'Itte Monne',
-        },
+        payload: {username, password, fullname},
       });
 
       // Action
@@ -78,9 +78,14 @@ describe('/authentications endpoint', () => {
 
     it('should response 401 if password wrong', async () => {
       // Arrange
+      const username = 'monne';
+      const password = 'secret';
+      const wrongPassword = 'wrong_password';
+      const fullname = 'Itte Monne';
+
       const requestPayload = {
-        username: 'monne',
-        password: 'wrong_password',
+        username,
+        password: wrongPassword,
       };
 
       const server = await createServer(container);
@@ -89,11 +94,7 @@ describe('/authentications endpoint', () => {
       await server.inject({
         method: 'POST',
         url: '/users',
-        payload: {
-          username: 'monne',
-          password: 'secret',
-          fullname: 'Itte Monne',
-        },
+        payload: {username, password, fullname},
       });
 
       // Action
@@ -162,27 +163,24 @@ describe('/authentications endpoint', () => {
   describe('when PUT /authentications', () => {
     it('should return 200 and new access token', async () => {
       // Arrange
+      const username = 'monne';
+      const password = 'secret';
+      const fullname = 'Itte Monne';
+
       const server = await createServer(container);
 
-      // add user
+      // Add user
       await server.inject({
         method: 'POST',
         url: '/users',
-        payload: {
-          username: 'monne',
-          password: 'secret',
-          fullname: 'Itte Monne',
-        },
+        payload: {username, password, fullname},
       });
 
-      // login user
+      // Login user
       const loginResponse = await server.inject({
         method: 'POST',
         url: '/authentications',
-        payload: {
-          username: 'monne',
-          password: 'secret',
-        },
+        payload: {username, password},
       });
 
       const {
@@ -198,6 +196,7 @@ describe('/authentications endpoint', () => {
         },
       });
 
+      // Assert
       const responseJson = JSON.parse(response.payload);
 
       expect(response.statusCode).toEqual(200);
@@ -216,6 +215,7 @@ describe('/authentications endpoint', () => {
         payload: {},
       });
 
+      // Assert
       const responseJson = JSON.parse(response.payload);
 
       expect(response.statusCode).toEqual(400);
@@ -236,6 +236,7 @@ describe('/authentications endpoint', () => {
         },
       });
 
+      // Assert
       const responseJson = JSON.parse(response.payload);
 
       expect(response.statusCode).toEqual(400);
@@ -292,8 +293,9 @@ describe('/authentications endpoint', () => {
   describe('when DELETE /authentications', () => {
     it('should response 200 if refresh token valid', async () => {
       // Arrange
-      const server = await createServer(container);
       const refreshToken = 'refresh_token';
+
+      const server = await createServer(container);
 
       await AuthenticationsTableTestHelper.addToken(refreshToken);
 
@@ -315,8 +317,9 @@ describe('/authentications endpoint', () => {
 
     it('should response 400 if refresh token not registered in database', async () => {
       // Arrange
-      const server = await createServer(container);
       const refreshToken = 'refresh_token';
+
+      const server = await createServer(container);
 
       // Action
       const response = await server.inject({
@@ -346,6 +349,7 @@ describe('/authentications endpoint', () => {
         payload: {},
       });
 
+      // Assert
       const responseJson = JSON.parse(response.payload);
 
       expect(response.statusCode).toEqual(400);
@@ -366,6 +370,7 @@ describe('/authentications endpoint', () => {
         },
       });
 
+      // Assert
       const responseJson = JSON.parse(response.payload);
 
       expect(response.statusCode).toEqual(400);

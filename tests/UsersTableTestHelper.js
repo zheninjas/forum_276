@@ -17,13 +17,13 @@ const UsersTableTestHelper = {
       values: [id],
     };
 
-    const result = await pool.query(query);
+    const {rows} = await pool.query(query);
 
-    return result.rows;
+    return rows;
   },
 
   async cleanTable() {
-    await pool.query('DELETE FROM users WHERE 1=1');
+    await pool.query('TRUNCATE TABLE users CASCADE');
   },
 };
 

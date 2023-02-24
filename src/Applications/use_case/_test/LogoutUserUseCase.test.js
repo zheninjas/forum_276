@@ -30,8 +30,10 @@ describe('LogoutUserUseCase', () => {
 
   it('should orchestrating the delete authentication action correctly', async () => {
     // Arrange
+    const refreshToken = 'refresh_token';
+
     const useCasePayload = {
-      refreshToken: 'refreshToken',
+      refreshToken,
     };
 
     const mockAuthenticationRepository = new AuthenticationRepository();
@@ -47,7 +49,7 @@ describe('LogoutUserUseCase', () => {
     await logoutUserUseCase.execute(useCasePayload);
 
     // Assert
-    expect(mockAuthenticationRepository.checkAvailabilityToken).toHaveBeenCalledWith(useCasePayload.refreshToken);
-    expect(mockAuthenticationRepository.deleteToken).toHaveBeenCalledWith(useCasePayload.refreshToken);
+    expect(mockAuthenticationRepository.checkAvailabilityToken).toHaveBeenCalledWith(refreshToken);
+    expect(mockAuthenticationRepository.deleteToken).toHaveBeenCalledWith(refreshToken);
   });
 });

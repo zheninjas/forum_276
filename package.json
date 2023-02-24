@@ -11,7 +11,10 @@
     "test:watch:change": "NODE_OPTIONS=--experimental-vm-modules NODE_NO_WARNINGS=1 jest --watch --setupFiles dotenv/config -i",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules NODE_NO_WARNINGS=1 jest --watchAll --coverage --setupFiles dotenv/config -i",
     "migrate": "node-pg-migrate",
-    "migrate:test": "node-pg-migrate -f config/database/test.json"
+    "migrate:test": "node-pg-migrate -f config/database/test.json",
+    "reset-db": "node-pg-migrate redo 99",
+    "reset-db:test": "node-pg-migrate -f config/database/test.json redo 99",
+    "lint": "eslint ./src"
   },
   "keywords": [],
   "author": "",

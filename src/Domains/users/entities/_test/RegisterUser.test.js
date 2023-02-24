@@ -57,9 +57,12 @@ describe('a RegisterUser entities', () => {
     };
 
     // Action
-    const {username, fullname, password} = new RegisterUser(payload);
+    const registerUser = new RegisterUser(payload);
 
     // Assert
+    const {username, fullname, password} = registerUser;
+
+    expect(registerUser).toBeInstanceOf(RegisterUser);
     expect(username).toEqual(payload.username);
     expect(fullname).toEqual(payload.fullname);
     expect(password).toEqual(payload.password);

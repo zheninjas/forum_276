@@ -12,13 +12,19 @@ import pool from './database/postgres/pool.js';
 import AuthenticationTokenManager from '../Applications/security/AuthenticationTokenManager.js';
 import PasswordHash from '../Applications/security/PasswordHash.js';
 import AuthenticationRepository from '../Domains/authentications/AuthenticationRepository.js';
+import ThreadCommentRepository from '../Domains/threads/ThreadCommentRepository.js';
+import ThreadRepository from '../Domains/threads/ThreadRepository.js';
 import UserRepository from '../Domains/users/UserRepository.js';
 import AuthenticationRepositoryPostgres from './repository/AuthenticationRepositoryPostgres.js';
+import ThreadCommentRepositoryPostgres from './repository/ThreadCommentRepositoryPostgres.js';
+import ThreadRepositoryPostgres from './repository/ThreadRepositoryPostgres.js';
 import UserRepositoryPostgres from './repository/UserRepositoryPostgres.js';
 import BcryptPasswordHash from './security/BcryptPasswordHash.js';
 import JwtTokenManager from './security/JwtTokenManager.js';
 
 // use case
+import AddThreadCommentUseCase from '../Applications/use_case/AddThreadCommentUseCase.js';
+import AddThreadUseCase from '../Applications/use_case/AddThreadUseCase.js';
 import AddUserUseCase from '../Applications/use_case/AddUserUseCase.js';
 import LoginUserUseCase from '../Applications/use_case/LoginUserUseCase.js';
 import LogoutUserUseCase from '../Applications/use_case/LogoutUserUseCase.js';
@@ -50,6 +56,34 @@ container.register([
       dependencies: [
         {
           concrete: pool,
+        },
+      ],
+    },
+  },
+  {
+    key: ThreadRepository.name,
+    Class: ThreadRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: ThreadCommentRepository.name,
+    Class: ThreadCommentRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: nanoid,
         },
       ],
     },
@@ -148,6 +182,36 @@ container.register([
         {
           name: 'authenticationTokenManager',
           internal: AuthenticationTokenManager.name,
+        },
+      ],
+    },
+  },
+  {
+    key: AddThreadUseCase.name,
+    Class: AddThreadUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: AddThreadCommentUseCase.name,
+    Class: AddThreadCommentUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+        {
+          name: 'threadCommentRepository',
+          internal: ThreadCommentRepository.name,
         },
       ],
     },

@@ -7,16 +7,17 @@ describe('BcryptPasswordHash', () => {
   describe('hash function', () => {
     it('should encrypt password correctly', async () => {
       // Arrange
+      const password = 'plain_password';
       const spyHash = jest.spyOn(bcrypt, 'hash');
       const bcryptPasswordHash = new BcryptPasswordHash(bcrypt);
 
       // Action
-      const encryptedPassword = await bcryptPasswordHash.hash('plain_password');
+      const encryptedPassword = await bcryptPasswordHash.hash(password);
 
       // Assert
       expect(typeof encryptedPassword).toEqual('string');
-      expect(encryptedPassword).not.toEqual('plain_password');
-      expect(spyHash).toBeCalledWith('plain_password', 10); // saltRound = 10 default untuk BcryptPasswordHash
+      expect(encryptedPassword).not.toEqual(password);
+      expect(spyHash).toBeCalledWith(password, 10); // saltRound = 10 default untuk BcryptPasswordHash
     });
   });
 
@@ -25,7 +26,7 @@ describe('BcryptPasswordHash', () => {
       // Arrange
       const bcryptPasswordHash = new BcryptPasswordHash(bcrypt);
 
-      // Act & Assert
+      // Action & Assert
       await expect(bcryptPasswordHash.comparePassword('plain_password', 'encrypted_password')).rejects.toThrow(
         AuthenticationError,
       );
@@ -33,12 +34,12 @@ describe('BcryptPasswordHash', () => {
 
     it('should not return AuthenticationError if password match', async () => {
       // Arrange
+      const password = 'plain_password';
       const bcryptPasswordHash = new BcryptPasswordHash(bcrypt);
-      const plainPassword = 'secret';
-      const encryptedPassword = await bcryptPasswordHash.hash(plainPassword);
+      const encryptedPassword = await bcryptPasswordHash.hash(password);
 
-      // Act & Assert
-      await expect(bcryptPasswordHash.comparePassword(plainPassword, encryptedPassword)).resolves.not.toThrow(
+      // Action & Assert
+      await expect(bcryptPasswordHash.comparePassword(password, encryptedPassword)).resolves.not.toThrow(
         AuthenticationError,
       );
     });

@@ -36,6 +36,28 @@ DomainErrorTranslator._directories = {
   'DELETE_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
     'refresh token harus string',
   ),
+
+  // UserCredential entity
+  'USER_CREDENTIAL.NOT_CONTAIN_AUTH_USER_ID': new InvariantError('autentikasi user tidak ditemukan'),
+  'USER_CREDENTIAL.AUTH_USER_ID_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
+    'format autentikasi user tidak sesuai',
+  ),
+
+  // InsertThread entity
+  'INSERT_THREAD.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('harus mengirimkan title dan body'),
+  'INSERT_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('title dan body harus string'),
+
+  // AddThreadCommentUseCase
+  'ADD_THREAD_COMMENT_USE_CASE.PAYLOAD_NOT_CONTAIN_CONTENT': new InvariantError('harus mengirimkan content'),
+  'ADD_THREAD_COMMENT_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('content harus string'),
+
+  // AddThreadCommnetUseCase params
+  'ADD_THREAD_COMMENT_USE_CASE.PARAMS_NOT_CONTAIN_THREAD_ID': new InvariantError(
+    'tidak terdapat thread id pada parameter',
+  ),
+  'ADD_THREAD_COMMENT_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
+    'thread id harus berupa string',
+  ),
 };
 
 export default DomainErrorTranslator;
