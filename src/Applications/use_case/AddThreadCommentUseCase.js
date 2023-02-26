@@ -6,12 +6,12 @@ class AddThreadCommentUseCase {
     this._threadCommentRepository = threadCommentRepository;
   }
 
-  async execute(useCasePayload, params, useAuthCredential) {
+  async execute(useCasePayload, useCaseParams, useAuthCredential) {
     this._verifyPayload(useCasePayload);
-    this._verifyParams(params);
+    this._verifyParams(useCaseParams);
 
     const {content} = useCasePayload;
-    const {threadId} = params;
+    const {threadId} = useCaseParams;
     const {userId} = new UserCredential(useAuthCredential);
 
     await this._threadRepository.verifyThread(threadId);
@@ -31,8 +31,8 @@ class AddThreadCommentUseCase {
     }
   }
 
-  _verifyParams(params) {
-    const {threadId} = params;
+  _verifyParams(useCaseParams) {
+    const {threadId} = useCaseParams;
 
     if (!threadId) {
       throw new Error('ADD_THREAD_COMMENT_USE_CASE.PARAMS_NOT_CONTAIN_THREAD_ID');

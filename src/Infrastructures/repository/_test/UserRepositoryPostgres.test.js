@@ -14,26 +14,6 @@ describe('UserRepositoryPostgres', () => {
     await pool.end();
   });
 
-  describe('verifyAvailableUsername function', () => {
-    it('should throw InvariantError when username not available', async () => {
-      // Arrange
-      const userRepositoryPostgres = new UserRepositoryPostgres(pool, {});
-
-      await UsersTableTestHelper.addUser({username: 'monne'});
-
-      // Action & Assert
-      await expect(userRepositoryPostgres.verifyAvailableUsername('monne')).rejects.toThrowError(InvariantError);
-    });
-
-    it('should not throw InvariantError when username available', async () => {
-      // Arrange
-      const userRepositoryPostgres = new UserRepositoryPostgres(pool, {});
-
-      // Action & Assert
-      await expect(userRepositoryPostgres.verifyAvailableUsername('monne')).resolves.not.toThrowError(InvariantError);
-    });
-  });
-
   describe('addUser function', () => {
     it('should persist register user and return registered user correctly', async () => {
       // Arrange
@@ -135,6 +115,26 @@ describe('UserRepositoryPostgres', () => {
 
       // Assert
       expect(fetchedUserId).toEqual(userId);
+    });
+  });
+
+  describe('verifyAvailableUsername function', () => {
+    it('should throw InvariantError when username not available', async () => {
+      // Arrange
+      const userRepositoryPostgres = new UserRepositoryPostgres(pool, {});
+
+      await UsersTableTestHelper.addUser({username: 'monne'});
+
+      // Action & Assert
+      await expect(userRepositoryPostgres.verifyAvailableUsername('monne')).rejects.toThrowError(InvariantError);
+    });
+
+    it('should not throw InvariantError when username available', async () => {
+      // Arrange
+      const userRepositoryPostgres = new UserRepositoryPostgres(pool, {});
+
+      // Action & Assert
+      await expect(userRepositoryPostgres.verifyAvailableUsername('monne')).resolves.not.toThrowError(InvariantError);
     });
   });
 });

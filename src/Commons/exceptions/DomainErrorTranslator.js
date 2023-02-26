@@ -58,6 +58,14 @@ DomainErrorTranslator._directories = {
   'ADD_THREAD_COMMENT_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
     'thread id harus berupa string',
   ),
+
+  // DeleteThreadCommnetUseCase params
+  'DELETE_THREAD_COMMENT_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
+    'parameter tidak lengkap',
+  ),
+  'DELETE_THREAD_COMMENT_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
+    'parameter harus berupa string',
+  ),
 };
 
 export default DomainErrorTranslator;

@@ -74,7 +74,7 @@ describe('DomainErrorTranslator', () => {
     );
   });
 
-  it('should translate verify payload and params at add thread comment use case error correctly', () => {
+  it('should translate verify payload and params error at add thread comment use case correctly', () => {
     expect(
       DomainErrorTranslator.translate(new Error('ADD_THREAD_COMMENT_USE_CASE.PAYLOAD_NOT_CONTAIN_CONTENT')),
     ).toStrictEqual(new InvariantError('harus mengirimkan content'));
@@ -92,6 +92,18 @@ describe('DomainErrorTranslator', () => {
     expect(
       DomainErrorTranslator.translate(new Error('ADD_THREAD_COMMENT_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION')),
     ).toStrictEqual(new InvariantError('thread id harus berupa string'));
+  });
+
+  it('should translate verify params error at delete thread comment use case correctly', () => {
+    expect(
+      DomainErrorTranslator.translate(new Error('DELETE_THREAD_COMMENT_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY')),
+    ).toStrictEqual(new InvariantError('parameter tidak lengkap'));
+
+    expect(
+      DomainErrorTranslator.translate(
+        new Error('DELETE_THREAD_COMMENT_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION'),
+      ),
+    ).toStrictEqual(new InvariantError('parameter harus berupa string'));
   });
 
   it('should return original error when error message is not needed to translate', () => {

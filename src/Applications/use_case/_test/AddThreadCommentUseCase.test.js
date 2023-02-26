@@ -4,7 +4,7 @@ import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import ThreadCommentRepository from '../../../Domains/threads/ThreadCommentRepository.js';
 import AddThreadCommentUseCase from '../AddThreadCommentUseCase.js';
 
-describe('AddThreadUseCase', () => {
+describe('AddThreadCommentUseCase', () => {
   describe('_verifyPayload function', () => {
     it('should throw error if use case payload not contain content', async () => {
       // Arrange
@@ -39,12 +39,12 @@ describe('AddThreadUseCase', () => {
         content: 'comment content',
       };
 
-      const params = {};
+      const useCaseParams = {};
 
       const addThreadCommentUseCase = new AddThreadCommentUseCase({});
 
       // Action & Assert
-      await expect(addThreadCommentUseCase.execute(useCasePayload, params, {})).rejects.toThrowError(
+      await expect(addThreadCommentUseCase.execute(useCasePayload, useCaseParams, {})).rejects.toThrowError(
         'ADD_THREAD_COMMENT_USE_CASE.PARAMS_NOT_CONTAIN_THREAD_ID',
       );
     });
@@ -56,20 +56,20 @@ describe('AddThreadUseCase', () => {
       };
 
 
-      const params = {
+      const useCaseParams = {
         threadId: 123,
       };
 
       const addThreadCommentUseCase = new AddThreadCommentUseCase({});
 
       // Action & Assert
-      await expect(addThreadCommentUseCase.execute(useCasePayload, params, {})).rejects.toThrowError(
+      await expect(addThreadCommentUseCase.execute(useCasePayload, useCaseParams, {})).rejects.toThrowError(
         'ADD_THREAD_COMMENT_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION',
       );
     });
   });
 
-  it('should orchestrating the add thread action correctly', async () => {
+  it('should orchestrating the add thread comment action correctly', async () => {
     // Arrange
     const content = 'comment content';
     const userAuthId = 'user-123';
@@ -79,7 +79,7 @@ describe('AddThreadUseCase', () => {
       content,
     };
 
-    const params = {
+    const useCaseParams = {
       threadId,
     };
 
@@ -111,7 +111,7 @@ describe('AddThreadUseCase', () => {
     });
 
     // Action
-    const addedThreadComment = await addThreadCommentUseCase.execute(useCasePayload, params, userAuthCredential);
+    const addedThreadComment = await addThreadCommentUseCase.execute(useCasePayload, useCaseParams, userAuthCredential);
 
     // Assert
     expect(addedThreadComment).toStrictEqual(expectedNewThreadComment);

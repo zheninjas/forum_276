@@ -1,6 +1,7 @@
 import autoBind from 'auto-bind';
-import AddThreadUseCase from '../../../../Applications/use_case/AddThreadUseCase.js';
 import AddThreadCommentUseCase from '../../../../Applications/use_case/AddThreadCommentUseCase.js';
+import AddThreadUseCase from '../../../../Applications/use_case/AddThreadUseCase.js';
+import DeleteThreadCommentUseCase from '../../../../Applications/use_case/DeleteThreadCommentUseCase.js';
 
 class ThreadsHandler {
   constructor(container) {
@@ -40,6 +41,16 @@ class ThreadsHandler {
 
     response.code(201);
     return response;
+  }
+
+  async deleteThreadCommentHandler(request, _) {
+    const deleteThreadCommentUseCase = this._container.getInstance(DeleteThreadCommentUseCase.name);
+
+    await deleteThreadCommentUseCase.execute(request.params, request.auth.credentials);
+
+    return {
+      status: 'success',
+    };
   }
 }
 
