@@ -25,6 +25,7 @@ import JwtTokenManager from './security/JwtTokenManager.js';
 // use case
 import AddThreadCommentUseCase from '../Applications/use_case/AddThreadCommentUseCase.js';
 import AddThreadUseCase from '../Applications/use_case/AddThreadUseCase.js';
+import GetThreadUseCase from '../Applications/use_case/GetThreadUseCase.js';
 import AddUserUseCase from '../Applications/use_case/AddUserUseCase.js';
 import DeleteThreadCommentUseCase from '../Applications/use_case/DeleteThreadCommentUseCase.js';
 import LoginUserUseCase from '../Applications/use_case/LoginUserUseCase.js';
@@ -190,6 +191,19 @@ container.register([
   {
     key: AddThreadUseCase.name,
     Class: AddThreadUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: GetThreadUseCase.name,
+    Class: GetThreadUseCase,
     parameter: {
       injectType: 'destructuring',
       dependencies: [

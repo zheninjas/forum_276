@@ -2,10 +2,16 @@
 import pool from '../src/Infrastructures/database/postgres/pool.js';
 
 const ThreadsTableTestHelper = {
-  async addThread({id = 'thread-123', title = 'Thread Title', body = 'Thread Body', owner = 'user-123'}) {
+  async addThread({
+    id = 'thread-123',
+    title = 'Thread Title',
+    body = 'Thread Body',
+    owner = 'user-123',
+    date = '2023-02-25T07:00:00.800Z',
+  }) {
     const query = {
-      text: 'INSERT INTO threads VALUES($1, $2, $3, $4)',
-      values: [id, title, body, owner],
+      text: 'INSERT INTO threads VALUES($1, $2, $3, $4, $5)',
+      values: [id, title, body, owner, date],
     };
 
     await pool.query(query);

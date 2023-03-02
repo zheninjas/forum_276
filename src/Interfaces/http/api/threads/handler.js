@@ -2,6 +2,7 @@ import autoBind from 'auto-bind';
 import AddThreadCommentUseCase from '../../../../Applications/use_case/AddThreadCommentUseCase.js';
 import AddThreadUseCase from '../../../../Applications/use_case/AddThreadUseCase.js';
 import DeleteThreadCommentUseCase from '../../../../Applications/use_case/DeleteThreadCommentUseCase.js';
+import GetThreadUseCase from '../../../../Applications/use_case/GetThreadUseCase.js';
 
 class ThreadsHandler {
   constructor(container) {
@@ -22,6 +23,18 @@ class ThreadsHandler {
 
     response.code(201);
     return response;
+  }
+
+  async getThreadHandler(request, _) {
+    const getThreadUseCase = this._container.getInstance(GetThreadUseCase.name);
+    const thread = await getThreadUseCase.execute(request.params);
+
+    return {
+      status: 'success',
+      data: {
+        thread,
+      },
+    };
   }
 
   async postThreadCommentHandler(request, h) {
