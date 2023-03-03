@@ -51,7 +51,7 @@ DomainErrorTranslator._directories = {
   'ADD_THREAD_COMMENT_USE_CASE.PAYLOAD_NOT_CONTAIN_CONTENT': new InvariantError('harus mengirimkan content'),
   'ADD_THREAD_COMMENT_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('content harus string'),
 
-  // AddThreadCommnetUseCase params
+  // AddThreadCommentUseCase params
   'ADD_THREAD_COMMENT_USE_CASE.PARAMS_NOT_CONTAIN_THREAD_ID': new InvariantError(
     'tidak terdapat thread id pada parameter',
   ),
@@ -59,11 +59,21 @@ DomainErrorTranslator._directories = {
     'thread id harus berupa string',
   ),
 
-  // DeleteThreadCommnetUseCase params
-  'DELETE_THREAD_COMMENT_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
-    'parameter tidak lengkap',
-  ),
+  // DeleteThreadCommentUseCase params
+  'DELETE_THREAD_COMMENT_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('parameter tidak lengkap'),
   'DELETE_THREAD_COMMENT_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
+    'parameter harus berupa string',
+  ),
+
+  // AddThreadCommentReplyUseCase
+  'ADD_THREAD_COMMENT_REPLY_USE_CASE.PAYLOAD_NOT_CONTAIN_CONTENT': new InvariantError('harus mengirimkan content'),
+  'ADD_THREAD_COMMENT_REPLY_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
+    'content harus string',
+  ),
+
+  // AddThreadCommentReplyUseCase params
+  'ADD_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('parameter tidak lengkap'),
+  'ADD_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
     'parameter harus berupa string',
   ),
 };

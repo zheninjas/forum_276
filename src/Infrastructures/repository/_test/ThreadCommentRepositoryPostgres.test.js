@@ -75,7 +75,7 @@ describe('ThreadCommentRepositoryPostgres', () => {
     });
   });
 
-  describe('deleteComment function', () => {
+  describe('softDeleteComment function', () => {
     it('should soft delete comment from thread correctly', async () => {
       // Arrange
       const threadCommentId = 'thread-comment-123';
@@ -114,6 +114,7 @@ describe('ThreadCommentRepositoryPostgres', () => {
       await ThreadCommentsTableTestHelper.addComment({
         id: threadCommentId,
         content: 'comment content',
+        threadId,
         owner: userId,
       });
 

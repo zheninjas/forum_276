@@ -1,4 +1,5 @@
 import autoBind from 'auto-bind';
+import AddThreadCommentReplyUseCase from '../../../../Applications/use_case/AddThreadCommentReplyUseCase.js';
 import AddThreadCommentUseCase from '../../../../Applications/use_case/AddThreadCommentUseCase.js';
 import AddThreadUseCase from '../../../../Applications/use_case/AddThreadUseCase.js';
 import DeleteThreadCommentUseCase from '../../../../Applications/use_case/DeleteThreadCommentUseCase.js';
@@ -64,6 +65,25 @@ class ThreadsHandler {
     return {
       status: 'success',
     };
+  }
+
+  async postThreadCommentReplyHandler(request, h) {
+    const addThreadCommentReplyUseCase = this._container.getInstance(AddThreadCommentReplyUseCase.name);
+    const addedReply = await addThreadCommentReplyUseCase.execute(
+      request.payload,
+      request.params,
+      request.auth.credentials,
+    );
+
+    const response = h.response({
+      status: 'success',
+      data: {
+        addedReply,
+      },
+    });
+
+    response.code(201);
+    return response;
   }
 }
 

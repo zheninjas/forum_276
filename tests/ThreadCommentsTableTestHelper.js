@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import pool from '../src/Infrastructures/database/postgres/pool.js';
 
-const ThreadsTableTestHelper = {
+const ThreadCommentsTableTestHelper = {
   async addComment({
     id = 'thread-comment-123',
     content = 'comment content ',
@@ -29,8 +29,8 @@ const ThreadsTableTestHelper = {
   },
 
   async cleanTable() {
-    await pool.query('TRUNCATE TABLE thread_comments');
+    await pool.query('TRUNCATE TABLE thread_comments CASCADE');
   },
 };
 
-export default ThreadsTableTestHelper;
+export default ThreadCommentsTableTestHelper;

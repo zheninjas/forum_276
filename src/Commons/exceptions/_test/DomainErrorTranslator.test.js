@@ -106,6 +106,30 @@ describe('DomainErrorTranslator', () => {
     ).toStrictEqual(new InvariantError('parameter harus berupa string'));
   });
 
+  it('should translate verify payload and params error at add thread comment reply use case correctly', () => {
+    expect(
+      DomainErrorTranslator.translate(new Error('ADD_THREAD_COMMENT_REPLY_USE_CASE.PAYLOAD_NOT_CONTAIN_CONTENT')),
+    ).toStrictEqual(new InvariantError('harus mengirimkan content'));
+
+    expect(
+      DomainErrorTranslator.translate(
+        new Error('ADD_THREAD_COMMENT_REPLY_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION'),
+      ),
+    ).toStrictEqual(new InvariantError('content harus string'));
+
+    expect(
+      DomainErrorTranslator.translate(
+        new Error('ADD_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY'),
+      ),
+    ).toStrictEqual(new InvariantError('parameter tidak lengkap'));
+
+    expect(
+      DomainErrorTranslator.translate(
+        new Error('ADD_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION'),
+      ),
+    ).toStrictEqual(new InvariantError('parameter harus berupa string'));
+  });
+
   it('should return original error when error message is not needed to translate', () => {
     // Arrange
     const error = new Error('some_error_message');

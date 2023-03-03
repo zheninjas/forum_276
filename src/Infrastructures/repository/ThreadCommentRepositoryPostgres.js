@@ -35,7 +35,8 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
           owner = $3 AND
           is_delete = false
         RETURNING
-          id`,
+          id
+      `,
       values: [threadCommentId, threadId, userId],
     };
 

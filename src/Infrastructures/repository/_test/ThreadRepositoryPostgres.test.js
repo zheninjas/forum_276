@@ -1,16 +1,19 @@
-import ThreadsTableTestHelper from '../../../../tests/ThreadsTableTestHelper.js';
+import ThreadCommentRepliesTableTestHelper from '../../../../tests/ThreadCommentRepliesTableTestHelper.js';
 import ThreadCommentsTableTestHelper from '../../../../tests/ThreadCommentsTableTestHelper.js';
+import ThreadsTableTestHelper from '../../../../tests/ThreadsTableTestHelper.js';
 import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
 import NotFoundError from '../../../Commons/exceptions/NotFoundError.js';
 import InsertThread from '../../../Domains/threads/entities/InsertThread.js';
 import NewThread from '../../../Domains/threads/entities/NewThread.js';
+import ThreadCommentDetail from '../../../Domains/threads/entities/ThreadCommentDetail.js';
+import ThreadCommentReplyDetail from '../../../Domains/threads/entities/ThreadCommentReplyDetail.js';
+import ThreadDetail from '../../../Domains/threads/entities/ThreadDetail.js';
 import pool from '../../database/postgres/pool.js';
 import ThreadRepositoryPostgres from '../ThreadRepositoryPostgres.js';
-import ThreadDetail from '../../../Domains/threads/entities/ThreadDetail.js';
-import ThreadCommentDetail from '../../../Domains/threads/entities/ThreadCommentDetail.js';
 
 describe('ThreadRepositoryPostgres', () => {
   afterEach(async () => {
+    await ThreadCommentRepliesTableTestHelper.cleanTable();
     await ThreadCommentsTableTestHelper.cleanTable();
     await ThreadsTableTestHelper.cleanTable();
     await UsersTableTestHelper.cleanTable();
@@ -104,6 +107,14 @@ describe('ThreadRepositoryPostgres', () => {
         date: '2023-02-25T08:10:00.800Z',
       };
 
+      const threadCommentTwoReply = {
+        id: 'thread-comment-reply-123',
+        content: 'reply comment content two',
+        threadCommentId: threadCommentTwo.id,
+        owner: userOne.id,
+        date: '2023-02-25T08:15:00.800Z',
+      };
+
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool);
 
       await UsersTableTestHelper.addUser({...userOne});
@@ -111,6 +122,7 @@ describe('ThreadRepositoryPostgres', () => {
       await ThreadsTableTestHelper.addThread({...thread});
       await ThreadCommentsTableTestHelper.addComment({...threadCommentOne});
       await ThreadCommentsTableTestHelper.addComment({...threadCommentTwo});
+      await ThreadCommentRepliesTableTestHelper.addReply({...threadCommentTwoReply});
 
       // Action
       const threadDetail = await threadRepositoryPostgres.getThreadWithComments(thread.id);
@@ -130,6 +142,7 @@ describe('ThreadRepositoryPostgres', () => {
               date: threadCommentOne.date,
               content: threadCommentOne.content,
               is_delete: false,
+              replies: [],
             }),
             new ThreadCommentDetail({
               id: threadCommentTwo.id,
@@ -137,6 +150,15 @@ describe('ThreadRepositoryPostgres', () => {
               date: threadCommentTwo.date,
               content: threadCommentTwo.content,
               is_delete: false,
+              replies: [
+                new ThreadCommentReplyDetail({
+                  id: threadCommentTwoReply.id,
+                  username: userOne.username,
+                  date: threadCommentTwoReply.date,
+                  content: threadCommentTwoReply.content,
+                  is_delete: false,
+                }),
+              ],
             }),
           ],
         }),

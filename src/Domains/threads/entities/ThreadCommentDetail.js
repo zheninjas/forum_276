@@ -8,13 +8,14 @@ class ThreadCommentDetail {
       date: this.date,
       content: this.content,
       is_delete: this.isDelete,
+      replies: this.replies,
     } = payload);
   }
 
   _verifyPayload(payload) {
-    const {id, username, date, content, is_delete: isDelete} = payload;
+    const {id, username, date, content, is_delete: isDelete, replies} = payload;
 
-    if (!id || !username || !date || !content || isDelete === undefined) {
+    if (!id || !username || !date || !content || isDelete === undefined || !replies) {
       throw new Error('THREAD_COMMENT_DETAIL.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
@@ -23,7 +24,8 @@ class ThreadCommentDetail {
       typeof username !== 'string' ||
       typeof date !== 'string' ||
       typeof content !== 'string' ||
-      typeof isDelete !== 'boolean'
+      typeof isDelete !== 'boolean' ||
+      !(replies instanceof Array)
     ) {
       throw new Error('THREAD_COMMENT_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }

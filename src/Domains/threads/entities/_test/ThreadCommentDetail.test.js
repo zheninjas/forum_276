@@ -21,6 +21,7 @@ describe('ThreadCommentDetail entities', () => {
       content: 'comment content',
       date: 1233145235,
       is_delete: false,
+      replies: [],
     };
 
     // Action & Assert
@@ -37,17 +38,19 @@ describe('ThreadCommentDetail entities', () => {
       content: 'comment content',
       date: '2023-02-26T07:43:24.859Z',
       is_delete: false,
+      replies: [],
     };
 
     // Action
-    const newThread = new ThreadCommentDetail(payload);
+    const newThreadComment = new ThreadCommentDetail(payload);
 
     // Assert
-    expect(newThread).toBeInstanceOf(ThreadCommentDetail);
-    expect(newThread.id).toEqual(payload.id);
-    expect(newThread.username).toEqual(payload.username);
-    expect(newThread.content).toEqual(payload.content);
-    expect(newThread.date).toEqual(payload.date);
-    expect(newThread.isDelete).toEqual(payload.is_delete);
+    expect(newThreadComment).toBeInstanceOf(ThreadCommentDetail);
+    expect(newThreadComment.id).toEqual(payload.id);
+    expect(newThreadComment.username).toEqual(payload.username);
+    expect(newThreadComment.content).toEqual(payload.content);
+    expect(newThreadComment.date).toEqual(payload.date);
+    expect(newThreadComment.isDelete).toEqual(payload.is_delete);
+    expect(newThreadComment.replies).toEqual(payload.replies);
   });
 });

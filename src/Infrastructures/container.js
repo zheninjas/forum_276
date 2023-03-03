@@ -13,16 +13,19 @@ import AuthenticationTokenManager from '../Applications/security/AuthenticationT
 import PasswordHash from '../Applications/security/PasswordHash.js';
 import AuthenticationRepository from '../Domains/authentications/AuthenticationRepository.js';
 import ThreadCommentRepository from '../Domains/threads/ThreadCommentRepository.js';
+import ThreadCommentReplyRepository from '../Domains/threads/ThreadCommentReplyRepository.js';
 import ThreadRepository from '../Domains/threads/ThreadRepository.js';
 import UserRepository from '../Domains/users/UserRepository.js';
 import AuthenticationRepositoryPostgres from './repository/AuthenticationRepositoryPostgres.js';
 import ThreadCommentRepositoryPostgres from './repository/ThreadCommentRepositoryPostgres.js';
+import ThreadCommentReplyRepositoryPostgres from './repository/ThreadCommentReplyRepositoryPostgres.js';
 import ThreadRepositoryPostgres from './repository/ThreadRepositoryPostgres.js';
 import UserRepositoryPostgres from './repository/UserRepositoryPostgres.js';
 import BcryptPasswordHash from './security/BcryptPasswordHash.js';
 import JwtTokenManager from './security/JwtTokenManager.js';
 
 // use case
+import AddThreadCommentReplyUseCase from '../Applications/use_case/AddThreadCommentReplyUseCase.js';
 import AddThreadCommentUseCase from '../Applications/use_case/AddThreadCommentUseCase.js';
 import AddThreadUseCase from '../Applications/use_case/AddThreadUseCase.js';
 import GetThreadUseCase from '../Applications/use_case/GetThreadUseCase.js';
@@ -79,6 +82,20 @@ container.register([
   {
     key: ThreadCommentRepository.name,
     Class: ThreadCommentRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: ThreadCommentReplyRepository.name,
+    Class: ThreadCommentReplyRepositoryPostgres,
     parameter: {
       dependencies: [
         {
@@ -240,6 +257,27 @@ container.register([
         {
           name: 'threadCommentRepository',
           internal: ThreadCommentRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: AddThreadCommentReplyUseCase.name,
+    Class: AddThreadCommentReplyUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+        {
+          name: 'threadCommentRepository',
+          internal: ThreadCommentRepository.name,
+        },
+        {
+          name: 'threadCommentReplyRepository',
+          internal: ThreadCommentReplyRepository.name,
         },
       ],
     },

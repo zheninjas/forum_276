@@ -1,6 +1,7 @@
 import NotFoundError from '../../Commons/exceptions/NotFoundError.js';
 import NewThread from '../../Domains/threads/entities/NewThread.js';
 import ThreadCommentDetail from '../../Domains/threads/entities/ThreadCommentDetail.js';
+import ThreadCommentReplyDetail from '../../Domains/threads/entities/ThreadCommentReplyDetail.js';
 import ThreadDetail from '../../Domains/threads/entities/ThreadDetail.js';
 import ThreadRepository from '../../Domains/threads/ThreadRepository.js';
 
@@ -33,18 +34,31 @@ class ThreadRepositoryPostgres extends ThreadRepository {
           threads.body as thread_body,
           to_char(threads.date, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as thread_date,
           thread_user.username as thread_owner_username,
+
           comments.id as comment_id,
           comment_user.username as comment_owner_username,
           to_char(comments.date, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as comment_date,
           comments.content as comment_content,
-          comments.is_delete as comment_deleted
+          comments.is_delete as comment_deleted,
+
+          replies.id as reply_id,
+          reply_user.username as reply_owner_username,
+          to_char(replies.date, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as reply_date,
+          replies.content as reply_content,
+          replies.is_delete as reply_deleted
         FROM
           threads
         JOIN users AS thread_user ON threads.owner = thread_user.id
         LEFT JOIN thread_comments AS comments ON threads.id = comments.thread_id
         LEFT JOIN users AS comment_user ON comments.owner = comment_user.id
+        LEFT JOIN thread_comment_replies AS replies ON comments.id = replies.thread_comment_id
+        LEFT JOIN users AS reply_user ON replies.owner = reply_user.id
         WHERE
           threads.id = $1
+        GROUP BY
+          replies.id, reply_owner_username, comments.id, comment_owner_username, threads.id, thread_owner_username
+        ORDER BY
+          comments.date
       `,
       values: [threadId],
     };
@@ -59,14 +73,50 @@ class ThreadRepositoryPostgres extends ThreadRepository {
       thread_owner_username: username,
     } = rows[0];
 
-    const comments = rows.flatMap(function({
-      comment_id: id,
-      comment_owner_username: username,
-      comment_date: date,
-      comment_content: content,
-      comment_deleted: isDelete,
-    }) {
-      return id !== null ? new ThreadCommentDetail({id, username, date, content, is_delete: isDelete}) : [];
+    const groupComment = rows.reduce((comments, row) => {
+      const {comment_id: id} = row;
+
+      comments[id] = comments[id] ?? [];
+      comments[id].push(row);
+
+      return comments;
+    }, {});
+
+    const comments = Object.values(groupComment).flatMap((row) => {
+      const {
+        comment_id: id,
+        comment_owner_username: username,
+        comment_date: date,
+        comment_content: content,
+        comment_deleted: isDelete,
+      } = row[0];
+
+      if (id === null) return [];
+
+      return new ThreadCommentDetail({
+        id,
+        username,
+        date,
+        content,
+        is_delete: isDelete,
+        replies: row.flatMap(function({
+          reply_id: id,
+          reply_owner_username: username,
+          reply_date: date,
+          reply_content: content,
+          reply_deleted: isDelete,
+        }) {
+          if (id === null) return [];
+
+          return new ThreadCommentReplyDetail({
+            id,
+            username,
+            date,
+            content,
+            is_delete: isDelete,
+          });
+        }),
+      });
     });
 
     return new ThreadDetail({

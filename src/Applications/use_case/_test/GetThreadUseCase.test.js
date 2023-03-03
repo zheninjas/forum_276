@@ -50,6 +50,7 @@ describe('GetThreadUseCase', () => {
       date: new Date().toISOString(),
       content: 'comment content',
       is_delete: false,
+      replies: [],
     });
 
     const mockThreadDetail = new ThreadDetail({
