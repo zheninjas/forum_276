@@ -312,7 +312,6 @@ describe('/threads endpoint', () => {
         username,
         date: expect.any(String),
         content: commentContent,
-        isDelete: false,
         replies: [],
       });
     });
@@ -337,7 +336,7 @@ describe('/threads endpoint', () => {
       await addComment(server, authHeader, {threadId}, {content: 'comment content one'});
 
       // Add comment two
-      const threadCommentIdTwo = await addComment(server, authHeader, {threadId}, {content: 'comment conten two'});
+      const threadCommentIdTwo = await addComment(server, authHeader, {threadId}, {content: 'comment content two'});
 
       // Delete comment two
       await server.inject({
@@ -366,12 +365,11 @@ describe('/threads endpoint', () => {
         username,
         date: expect.any(String),
         content: '**komentar telah dihapus**',
-        isDelete: true,
         replies: [],
       });
     });
 
-    it('should resposne 200 and thread with empty comment', async () => {
+    it('should response 200 and thread with empty comment', async () => {
       // Arrange
       const username = 'monne';
       const password = 'secret';
@@ -403,7 +401,116 @@ describe('/threads endpoint', () => {
       expect(responseJson.data.thread.comments).toHaveLength(0);
     });
 
-    it('should resposne 404 when thread not exist', async () => {
+    it('should response 200 and thread with comments and replies', async () => {
+      // Arrange
+      const username = 'monne';
+      const password = 'secret';
+      const threadCommentReplyContent = 'reply comment content';
+
+      const server = await createServer(container);
+
+      // Add user
+      await createUser(server, {username, password, fullname: 'Itte Monne'});
+
+      // Login user
+      const authHeader = await loginUser(server, {username, password});
+
+      // Add thread
+      const threadId = await addThread(server, authHeader, {title: 'Thread Title', body: 'Thread Body'});
+
+      // Add comment
+      const threadCommentId = await addComment(server, authHeader, {threadId}, {content: 'comment content'});
+
+      // Add reply
+      const threadCommentReplyId = await addReply(
+        server,
+        authHeader,
+        {threadId, threadCommentId},
+        {content: threadCommentReplyContent},
+      );
+
+      // Action
+      const response = await server.inject({
+        method: 'GET',
+        url: `/threads/${threadId}`,
+        headers: authHeader,
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual('success');
+      expect(responseJson.data.thread.comments[0].replies).toBeInstanceOf(Array);
+      expect(responseJson.data.thread.comments[0].replies).toHaveLength(1);
+      expect(typeof responseJson.data.thread.comments[0].replies[0]).toEqual('object');
+      expect(responseJson.data.thread.comments[0].replies[0]).toStrictEqual({
+        id: threadCommentReplyId,
+        content: threadCommentReplyContent,
+        date: expect.any(String),
+        username,
+      });
+    });
+
+    it('should response 200 and thread with comments and deleted replies', async () => {
+      // Arrange
+      const username = 'monne';
+      const password = 'secret';
+      const threadCommentReplyContent = 'reply comment content';
+
+      const server = await createServer(container);
+
+      // Add user
+      await createUser(server, {username, password, fullname: 'Itte Monne'});
+
+      // Login user
+      const authHeader = await loginUser(server, {username, password});
+
+      // Add thread
+      const threadId = await addThread(server, authHeader, {title: 'Thread Title', body: 'Thread Body'});
+
+      // Add comment
+      const threadCommentId = await addComment(server, authHeader, {threadId}, {content: 'comment content'});
+
+      // Add reply
+      const threadCommentReplyId = await addReply(
+        server,
+        authHeader,
+        {threadId, threadCommentId},
+        {content: threadCommentReplyContent},
+      );
+
+      // Delete reply
+      await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadId}/comments/${threadCommentId}/replies/${threadCommentReplyId}`,
+        headers: authHeader,
+      });
+
+      // Action
+      const response = await server.inject({
+        method: 'GET',
+        url: `/threads/${threadId}`,
+        headers: authHeader,
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual('success');
+      expect(responseJson.data.thread.comments[0].replies).toBeInstanceOf(Array);
+      expect(responseJson.data.thread.comments[0].replies).toHaveLength(1);
+      expect(typeof responseJson.data.thread.comments[0].replies[0]).toEqual('object');
+      expect(responseJson.data.thread.comments[0].replies[0]).toStrictEqual({
+        id: threadCommentReplyId,
+        content: '**balasan telah dihapus**',
+        date: expect.any(String),
+        username,
+      });
+    });
+
+    it('should response 404 when thread not exist', async () => {
       // Arrange
       const username = 'monne';
       const password = 'secret';

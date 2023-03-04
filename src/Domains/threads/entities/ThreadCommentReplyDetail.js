@@ -2,13 +2,11 @@ class ThreadCommentReplyDetail {
   constructor(payload) {
     this._validatePayload(payload);
 
-    ({
-      id: this.id,
-      username: this.username,
-      date: this.date,
-      content: this.content,
-      is_delete: this.isDelete,
-    } = payload);
+    ({id: this.id, username: this.username, date: this.date} = payload);
+
+    const {content, is_delete: isDelete} = payload;
+
+    this.content = this._verifyDeleted(content, isDelete);
   }
 
   _validatePayload(payload) {
@@ -27,6 +25,14 @@ class ThreadCommentReplyDetail {
     ) {
       throw new Error('THREAD_COMMENT_REPLY_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
+  }
+
+  _verifyDeleted(content, isDelete) {
+    if (isDelete) {
+      return '**balasan telah dihapus**';
+    }
+
+    return content;
   }
 }
 

@@ -10,21 +10,7 @@ class GetThreadUseCase {
 
     await this._threadRepository.verifyThread(threadId);
 
-    const threadDetail = await this._threadRepository.getThreadWithComments(threadId);
-
-    threadDetail.comments.map((threadCommentDetail) => {
-      if (threadCommentDetail.isDelete) {
-        threadCommentDetail.content = '**komentar telah dihapus**';
-      }
-
-      threadCommentDetail.replies.map((threadCommentReplyDetail) => {
-        if (threadCommentReplyDetail.isDelete) {
-          threadCommentReplyDetail.content = '**balasan telah dihapus**';
-        }
-      });
-    });
-
-    return threadDetail;
+    return await this._threadRepository.getThreadWithComments(threadId);
   }
 
   _validateParams(params) {

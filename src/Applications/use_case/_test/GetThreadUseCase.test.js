@@ -1,5 +1,6 @@
 import {jest} from '@jest/globals';
 import ThreadCommentDetail from '../../../Domains/threads/entities/ThreadCommentDetail.js';
+import ThreadCommentReplyDetail from '../../../Domains/threads/entities/ThreadCommentReplyDetail.js';
 import ThreadDetail from '../../../Domains/threads/entities/ThreadDetail.js';
 import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import GetThreadUseCase from '../GetThreadUseCase.js';
@@ -44,14 +45,39 @@ describe('GetThreadUseCase', () => {
       threadId,
     };
 
-    const threadCommentDetail = new ThreadCommentDetail({
-      id: 'thread-comment-123',
-      username,
-      date: '2023-02-26T08:00:00.800Z',
-      content: 'comment content',
-      is_delete: false,
-      replies: [],
-    });
+    const threadComments = [
+      new ThreadCommentDetail({
+        id: 'thread-comment-123',
+        username,
+        date: '2023-02-26T08:00:00.800Z',
+        content: 'comment content',
+        is_delete: false,
+        replies: [
+          new ThreadCommentReplyDetail({
+            id: 'thread-comment-reply-123',
+            username: username,
+            date: '2023-02-26T08:10:00.800Z',
+            content: 'reply comment 1',
+            is_delete: true,
+          }),
+          new ThreadCommentReplyDetail({
+            id: 'thread-comment-reply-234',
+            username: username,
+            date: '2023-02-26T08:20:00.800Z',
+            content: 'reply comment 2',
+            is_delete: false,
+          }),
+        ],
+      }),
+      new ThreadCommentDetail({
+        id: 'thread-comment-234',
+        username,
+        date: '2023-02-26T08:30:00.800Z',
+        content: 'comment content 2',
+        is_delete: true,
+        replies: [],
+      }),
+    ];
 
     const mockThreadDetail = new ThreadDetail({
       id: threadId,
@@ -59,7 +85,7 @@ describe('GetThreadUseCase', () => {
       body,
       date: threadDate,
       username,
-      comments: [threadCommentDetail],
+      comments: threadComments,
     });
 
     const expectedThreadDetail = new ThreadDetail({
@@ -68,7 +94,7 @@ describe('GetThreadUseCase', () => {
       body,
       date: threadDate,
       username,
-      comments: [threadCommentDetail],
+      comments: threadComments,
     });
 
     const mockThreadRepository = new ThreadRepository();

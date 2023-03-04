@@ -32,6 +32,44 @@ describe('ThreadCommentDetail entity', () => {
     });
   });
 
+  describe('_verifyDeleted function', () => {
+    it('should return change content as deleted message when comment deleted', () => {
+      // Arrange
+      const payload = {
+        id: 'thread-comment-123',
+        username: 'monne',
+        content: 'comment content',
+        date: '2023-02-26T07:00:00.800Z',
+        is_delete: true,
+        replies: [],
+      };
+
+      // Action
+      const threadCommentDetail = new ThreadCommentDetail(payload);
+
+      // Assert
+      expect(threadCommentDetail.content).toStrictEqual('**komentar telah dihapus**');
+    });
+
+    it('should return original content when comment not deleted', () => {
+      // Arrange
+      const payload = {
+        id: 'thread-comment-123',
+        username: 'monne',
+        content: 'comment content',
+        date: '2023-02-26T07:00:00.800Z',
+        is_delete: false,
+        replies: [],
+      };
+
+      // Action
+      const threadCommentDetail = new ThreadCommentDetail(payload);
+
+      // Assert
+      expect(threadCommentDetail.content).toStrictEqual('comment content');
+    });
+  });
+
   it('should create ThreadCommentDetail entity correctly', () => {
     // Arrange
     const payload = {
@@ -52,7 +90,6 @@ describe('ThreadCommentDetail entity', () => {
     expect(newThreadComment.username).toEqual(payload.username);
     expect(newThreadComment.content).toEqual(payload.content);
     expect(newThreadComment.date).toEqual(payload.date);
-    expect(newThreadComment.isDelete).toEqual(payload.is_delete);
     expect(newThreadComment.replies).toEqual(payload.replies);
   });
 });
