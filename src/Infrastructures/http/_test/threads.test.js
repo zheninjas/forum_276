@@ -133,7 +133,7 @@ describe('/threads endpoint', () => {
       expect(response.statusCode).toEqual(201);
       expect(responseJson.status).toEqual('success');
       expect(typeof responseJson.data.addedThread).toEqual('object');
-      expect(responseJson.data.addedThread).toMatchObject({
+      expect(responseJson.data.addedThread).toStrictEqual({
         id: expect.any(String),
         title,
         owner: expect.any(String),
@@ -295,7 +295,7 @@ describe('/threads endpoint', () => {
       expect(responseJson.status).toEqual('success');
       expect(typeof responseJson.data).toEqual('object');
       expect(typeof responseJson.data.thread).toEqual('object');
-      expect(responseJson.data.thread).toMatchObject({
+      expect(responseJson.data.thread).toStrictEqual({
         id: threadId,
         title,
         body,
@@ -307,11 +307,13 @@ describe('/threads endpoint', () => {
       expect(responseJson.data.thread.comments).toBeInstanceOf(Array);
       expect(responseJson.data.thread.comments).toHaveLength(1);
       expect(typeof responseJson.data.thread.comments[0]).toEqual('object');
-      expect(responseJson.data.thread.comments[0]).toMatchObject({
+      expect(responseJson.data.thread.comments[0]).toStrictEqual({
         id: threadCommentId,
         username,
         date: expect.any(String),
         content: commentContent,
+        isDelete: false,
+        replies: [],
       });
     });
 
@@ -359,11 +361,13 @@ describe('/threads endpoint', () => {
       expect(responseJson.data.thread.comments).toBeInstanceOf(Array);
       expect(responseJson.data.thread.comments).toHaveLength(2);
       expect(typeof responseJson.data.thread.comments[1]).toEqual('object');
-      expect(responseJson.data.thread.comments[1]).toMatchObject({
+      expect(responseJson.data.thread.comments[1]).toStrictEqual({
         id: threadCommentIdTwo,
         username,
         date: expect.any(String),
         content: '**komentar telah dihapus**',
+        isDelete: true,
+        replies: [],
       });
     });
 
@@ -469,7 +473,7 @@ describe('/threads endpoint', () => {
       expect(response.statusCode).toEqual(201);
       expect(responseJson.status).toEqual('success');
       expect(typeof responseJson.data.addedComment).toEqual('object');
-      expect(responseJson.data.addedComment).toMatchObject({
+      expect(responseJson.data.addedComment).toStrictEqual({
         id: expect.any(String),
         content,
         owner: expect.any(String),
@@ -852,7 +856,7 @@ describe('/threads endpoint', () => {
       expect(response.statusCode).toEqual(201);
       expect(responseJson.status).toEqual('success');
       expect(typeof responseJson.data.addedReply).toEqual('object');
-      expect(responseJson.data.addedReply).toMatchObject({
+      expect(responseJson.data.addedReply).toStrictEqual({
         id: expect.any(String),
         content,
         owner: expect.any(String),
