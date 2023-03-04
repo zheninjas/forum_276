@@ -6,18 +6,17 @@ class DeleteThreadCommentUseCase {
   }
 
   async execute(useCaseParams, userAuthCredential) {
-    this._verifyParams(useCaseParams);
+    this._validateParams(useCaseParams);
 
     const {threadId, threadCommentId} = useCaseParams;
     const {userId} = new UserCredential(userAuthCredential);
 
     await this._threadCommentRepository.verifyComment(threadCommentId, threadId);
     await this._threadCommentRepository.verifyCommentOwner(threadCommentId, userId);
-
-    return await this._threadCommentRepository.softDeleteComment(threadCommentId, threadId, userId);
+    await this._threadCommentRepository.softDeleteComment(threadCommentId, threadId, userId);
   }
 
-  _verifyParams(useCaseParams) {
+  _validateParams(useCaseParams) {
     const {threadId, threadCommentId} = useCaseParams;
 
     if (!threadId || !threadCommentId) {

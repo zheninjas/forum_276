@@ -1,11 +1,11 @@
 import {jest} from '@jest/globals';
-import ThreadDetail from '../../../Domains/threads/entities/ThreadDetail.js';
 import ThreadCommentDetail from '../../../Domains/threads/entities/ThreadCommentDetail.js';
+import ThreadDetail from '../../../Domains/threads/entities/ThreadDetail.js';
 import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import GetThreadUseCase from '../GetThreadUseCase.js';
 
 describe('GetThreadUseCase', () => {
-  describe('_verifyParams function', () => {
+  describe('_validateParams function', () => {
     it('should throw error if params not contain needed property', async () => {
       // Arrange
       const useCaseParams = {};
@@ -38,7 +38,7 @@ describe('GetThreadUseCase', () => {
     const threadId = 'thread-123';
     const title = 'Thread Title';
     const body = 'Thread Body';
-    const threadDate = new Date().toISOString();
+    const threadDate = '2023-02-26T07:00:00.800Z';
 
     const useCaseParams = {
       threadId,
@@ -47,7 +47,7 @@ describe('GetThreadUseCase', () => {
     const threadCommentDetail = new ThreadCommentDetail({
       id: 'thread-comment-123',
       username,
-      date: new Date().toISOString(),
+      date: '2023-02-26T08:00:00.800Z',
       content: 'comment content',
       is_delete: false,
       replies: [],
@@ -59,9 +59,7 @@ describe('GetThreadUseCase', () => {
       body,
       date: threadDate,
       username,
-      comments: [
-        threadCommentDetail,
-      ],
+      comments: [threadCommentDetail],
     });
 
     const expectedThreadDetail = new ThreadDetail({
@@ -70,9 +68,7 @@ describe('GetThreadUseCase', () => {
       body,
       date: threadDate,
       username,
-      comments: [
-        threadCommentDetail,
-      ],
+      comments: [threadCommentDetail],
     });
 
     const mockThreadRepository = new ThreadRepository();
@@ -88,8 +84,8 @@ describe('GetThreadUseCase', () => {
     const threadDetail = await getThreadUseCase.execute(useCaseParams);
 
     // Assert
+    expect(threadDetail).toStrictEqual(expectedThreadDetail);
     expect(mockThreadRepository.verifyThread).toBeCalledWith(threadId);
     expect(mockThreadRepository.getThreadWithComments).toBeCalledWith(threadId);
-    expect(threadDetail).toStrictEqual(expectedThreadDetail);
   });
 });

@@ -32,7 +32,7 @@ describe('DomainErrorTranslator', () => {
 
   it('should translate verify payload at refresh authentication use case error correctly', () => {
     expect(
-      DomainErrorTranslator.translate(new Error('REFRESH_AUTHENTICATION_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN')),
+      DomainErrorTranslator.translate(new Error('REFRESH_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_CONTAIN_REFRESH_TOKEN')),
     ).toStrictEqual(new InvariantError('harus mengirimkan token refresh'));
 
     expect(
@@ -44,7 +44,7 @@ describe('DomainErrorTranslator', () => {
 
   it('should translate verify payload at delete authentication use case error correctly', () => {
     expect(
-      DomainErrorTranslator.translate(new Error('DELETE_AUTHENTICATION_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN')),
+      DomainErrorTranslator.translate(new Error('DELETE_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_CONTAIN_REFRESH_TOKEN')),
     ).toStrictEqual(new InvariantError('harus mengirimkan token refresh'));
 
     expect(

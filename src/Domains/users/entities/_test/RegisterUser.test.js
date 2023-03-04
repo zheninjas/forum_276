@@ -1,51 +1,53 @@
 import RegisterUser from '../RegisterUser.js';
 
-describe('a RegisterUser entities', () => {
-  it('should throw error when payload did not contain needed property', () => {
-    // Arrange
-    const payload = {
-      username: 'abc',
-      password: 'abc',
-    };
+describe('a RegisterUser entity', () => {
+  describe('_validatePayload function', () => {
+    it('should throw error when payload did not contain needed property', () => {
+      // Arrange
+      const payload = {
+        username: 'abc',
+        password: 'abc',
+      };
 
-    // Action and Assert
-    expect(() => new RegisterUser(payload)).toThrowError('REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY');
-  });
+      // Action and Assert
+      expect(() => new RegisterUser(payload)).toThrowError('REGISTER_USER.NOT_CONTAIN_NEEDED_PROPERTY');
+    });
 
-  it('should throw error when payload did not meet data type specification', () => {
-    // Arrange
-    const payload = {
-      username: 123,
-      fullname: true,
-      password: 'abc',
-    };
+    it('should throw error when payload did not meet data type specification', () => {
+      // Arrange
+      const payload = {
+        username: 123,
+        fullname: true,
+        password: 'abc',
+      };
 
-    // Action and Assert
-    expect(() => new RegisterUser(payload)).toThrowError('REGISTER_USER.NOT_MEET_DATA_TYPE_SPECIFICATION');
-  });
+      // Action and Assert
+      expect(() => new RegisterUser(payload)).toThrowError('REGISTER_USER.NOT_MEET_DATA_TYPE_SPECIFICATION');
+    });
 
-  it('should throw error when username contains more than 50 character', () => {
-    // Arrange
-    const payload = {
-      username: 'SuperDuperExtraUltraLongUsernameTextWithMoreThan50Character',
-      fullname: 'Itte Monne',
-      password: 'abc',
-    };
+    it('should throw error when username contains more than 50 character', () => {
+      // Arrange
+      const payload = {
+        username: 'SuperDuperExtraUltraLongUsernameTextWithMoreThan50Character',
+        fullname: 'Itte Monne',
+        password: 'abc',
+      };
 
-    // Action and Assert
-    expect(() => new RegisterUser(payload)).toThrowError('REGISTER_USER.USERNAME_LIMIT_CHAR');
-  });
+      // Action and Assert
+      expect(() => new RegisterUser(payload)).toThrowError('REGISTER_USER.USERNAME_LIMIT_CHAR');
+    });
 
-  it('should throw error when username contains restricted character', () => {
-    // Arrange
-    const payload = {
-      username: 'mon ne',
-      fullname: 'monne',
-      password: 'abc',
-    };
+    it('should throw error when username contains restricted character', () => {
+      // Arrange
+      const payload = {
+        username: 'mon ne',
+        fullname: 'monne',
+        password: 'abc',
+      };
 
-    // Action and Assert
-    expect(() => new RegisterUser(payload)).toThrowError('REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER');
+      // Action and Assert
+      expect(() => new RegisterUser(payload)).toThrowError('REGISTER_USER.USERNAME_CONTAIN_RESTRICTED_CHARACTER');
+    });
   });
 
   it('should create registerUser object correctly', () => {
@@ -60,11 +62,9 @@ describe('a RegisterUser entities', () => {
     const registerUser = new RegisterUser(payload);
 
     // Assert
-    const {username, fullname, password} = registerUser;
-
     expect(registerUser).toBeInstanceOf(RegisterUser);
-    expect(username).toEqual(payload.username);
-    expect(fullname).toEqual(payload.fullname);
-    expect(password).toEqual(payload.password);
+    expect(registerUser.username).toEqual(payload.username);
+    expect(registerUser.fullname).toEqual(payload.fullname);
+    expect(registerUser.password).toEqual(payload.password);
   });
 });

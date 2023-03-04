@@ -1,30 +1,32 @@
 import NewThread from '../NewThread.js';
 
-describe('NewThread entities', () => {
-  it('should throw error when payload does not contain needed property', () => {
-    // Arrange
-    const payload = {
-      id: 'thread-123',
-      title: 'Thread Title',
-    };
+describe('NewThread entity', () => {
+  describe('_validatePayload function', () => {
+    it('should throw error when payload does not contain needed property', () => {
+      // Arrange
+      const payload = {
+        id: 'thread-123',
+        title: 'Thread Title',
+      };
 
-    // Action & Assert
-    expect(() => new NewThread(payload)).toThrowError('NEW_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
+      // Action & Assert
+      expect(() => new NewThread(payload)).toThrowError('NEW_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
+    });
+
+    it('should throw error when payload not meet data type specification', () => {
+      // Arrange
+      const payload = {
+        id: 'thread-123',
+        title: 'Thread Title',
+        owner: 123,
+      };
+
+      // Action & Assert
+      expect(() => new NewThread(payload)).toThrowError('NEW_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
+    });
   });
 
-  it('should throw error when payload not meet data type specification', () => {
-    // Arrange
-    const payload = {
-      id: 'thread-123',
-      title: 'Thread Title',
-      owner: 123,
-    };
-
-    // Action & Assert
-    expect(() => new NewThread(payload)).toThrowError('NEW_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
-  });
-
-  it('should create NewThread entities correctly', () => {
+  it('should create NewThread entity correctly', () => {
     // Arrange
     const payload = {
       id: 'thread-123',

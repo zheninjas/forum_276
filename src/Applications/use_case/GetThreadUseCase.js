@@ -4,7 +4,7 @@ class GetThreadUseCase {
   }
 
   async execute(useCaseParams) {
-    this._verifyParams(useCaseParams);
+    this._validateParams(useCaseParams);
 
     const {threadId} = useCaseParams;
 
@@ -27,7 +27,7 @@ class GetThreadUseCase {
     return threadDetail;
   }
 
-  _verifyParams(params) {
+  _validateParams(params) {
     const {threadId} = params;
 
     if (!threadId) {

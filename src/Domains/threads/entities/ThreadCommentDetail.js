@@ -1,6 +1,6 @@
 class ThreadCommentDetail {
   constructor(payload) {
-    this._verifyPayload(payload);
+    this._validatePayload(payload);
 
     ({
       id: this.id,
@@ -12,7 +12,7 @@ class ThreadCommentDetail {
     } = payload);
   }
 
-  _verifyPayload(payload) {
+  _validatePayload(payload) {
     const {id, username, date, content, is_delete: isDelete, replies} = payload;
 
     if (!id || !username || !date || !content || isDelete === undefined || !replies) {

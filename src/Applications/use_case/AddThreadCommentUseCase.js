@@ -7,8 +7,8 @@ class AddThreadCommentUseCase {
   }
 
   async execute(useCasePayload, useCaseParams, useAuthCredential) {
-    this._verifyPayload(useCasePayload);
-    this._verifyParams(useCaseParams);
+    this._validatePayload(useCasePayload);
+    this._validateParams(useCaseParams);
 
     const {content} = useCasePayload;
     const {threadId} = useCaseParams;
@@ -19,7 +19,7 @@ class AddThreadCommentUseCase {
     return await this._threadCommentRepository.addComment(content, threadId, userId);
   }
 
-  _verifyPayload(payload) {
+  _validatePayload(payload) {
     const {content} = payload;
 
     if (!content) {
@@ -31,7 +31,7 @@ class AddThreadCommentUseCase {
     }
   }
 
-  _verifyParams(useCaseParams) {
+  _validateParams(useCaseParams) {
     const {threadId} = useCaseParams;
 
     if (!threadId) {

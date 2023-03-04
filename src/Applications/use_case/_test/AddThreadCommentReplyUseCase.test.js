@@ -1,12 +1,12 @@
 import {jest} from '@jest/globals';
 import NewThreadCommentReply from '../../../Domains/threads/entities/NewThreadCommentReply.js';
-import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
-import ThreadCommentRepository from '../../../Domains/threads/ThreadCommentRepository.js';
 import ThreadCommentReplyRepository from '../../../Domains/threads/ThreadCommentReplyRepository.js';
+import ThreadCommentRepository from '../../../Domains/threads/ThreadCommentRepository.js';
+import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import AddThreadCommentReplyUseCase from '../AddThreadCommentReplyUseCase.js';
 
 describe('AddThreadCommentReplyUseCase', () => {
-  describe('_verifyPayload function', () => {
+  describe('_validatePayload function', () => {
     it('should throw error if use case payload not contain content', async () => {
       // Arrange
       const useCasePayload = {};
@@ -33,7 +33,7 @@ describe('AddThreadCommentReplyUseCase', () => {
     });
   });
 
-  describe('_verifyParams function', () => {
+  describe('_validateParams function', () => {
     it('should throw error if params not contain needed property', async () => {
       // Arrange
       const useCasePayload = {

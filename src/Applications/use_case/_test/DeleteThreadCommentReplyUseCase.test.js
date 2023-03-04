@@ -3,7 +3,7 @@ import ThreadCommentReplyRepository from '../../../Domains/threads/ThreadComment
 import DeleteThreadCommentReplyUseCase from '../DeleteThreadCommentReplyUseCase.js';
 
 describe('DeleteThreadCommentReplyUseCase', () => {
-  describe('_verifyParams function', () => {
+  describe('_validateParams function', () => {
     it('should throw error if params not contain needed property', async () => {
       // Arrange
       const useCaseParams = {

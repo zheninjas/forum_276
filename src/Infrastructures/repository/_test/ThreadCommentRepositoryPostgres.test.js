@@ -53,7 +53,7 @@ describe('ThreadCommentRepositoryPostgres', () => {
       expect(threadComments).toHaveLength(1);
     });
 
-    it('should return new comment correctly', async () => {
+    it('should return new thread comment correctly', async () => {
       // Arrange
       const content = 'comment content';
       const expectedThreadCommentId = 'thread-comment-123';

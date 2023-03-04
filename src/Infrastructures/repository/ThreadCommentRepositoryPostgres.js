@@ -1,5 +1,5 @@
-import NotFoundError from '../../Commons/exceptions/NotFoundError.js';
 import AuthorizationError from '../../Commons/exceptions/AuthorizationError.js';
+import NotFoundError from '../../Commons/exceptions/NotFoundError.js';
 import NewThreadComment from '../../Domains/threads/entities/NewThreadComment.js';
 import ThreadCommentRepository from '../../Domains/threads/ThreadCommentRepository.js';
 

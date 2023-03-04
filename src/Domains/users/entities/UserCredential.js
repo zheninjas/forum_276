@@ -1,11 +1,11 @@
 class UserCredential {
   constructor(credential) {
-    this._verifyCredential(credential);
+    this._validateCredential(credential);
 
     ({id: this.userId} = credential);
   }
 
-  _verifyCredential(credential) {
+  _validateCredential(credential) {
     const {id} = credential;
 
     if (!id) {

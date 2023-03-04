@@ -1,12 +1,11 @@
 class InsertThread {
   constructor(payload) {
-    this._verifyPayload(payload);
+    this._validatePayload(payload);
 
-    this.title = payload.title;
-    this.body = payload.body;
+    ({title: this.title, body: this.body} = payload);
   }
 
-  _verifyPayload({title, body}) {
+  _validatePayload({title, body}) {
     if (!title || !body) {
       throw new Error('INSERT_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
     }

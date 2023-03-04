@@ -1,11 +1,11 @@
 class NewThreadCommentReply {
   constructor(payload) {
-    this._verifyPayload(payload);
+    this._validatePayload(payload);
 
     ({id: this.id, content: this.content, owner: this.owner} = payload);
   }
 
-  _verifyPayload({id, content, owner}) {
+  _validatePayload({id, content, owner}) {
     if (!id || !content || !owner) {
       throw new Error('NEW_THREAD_COMMENT_REPLY.NOT_CONTAIN_NEEDED_PROPERTY');
     }

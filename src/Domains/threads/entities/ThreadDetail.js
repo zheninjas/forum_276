@@ -1,6 +1,6 @@
 class ThreadDetail {
   constructor(payload) {
-    this._verifyPayload(payload);
+    this._validatePayload(payload);
 
     ({
       id: this.id,
@@ -12,7 +12,7 @@ class ThreadDetail {
     } = payload);
   }
 
-  _verifyPayload(payload) {
+  _validatePayload(payload) {
     const {id, title, body, date, username, comments} = payload;
 
     if (!id || !title || !body || !date || !username || !comments) {

@@ -1,6 +1,6 @@
 import NewAuth from '../NewAuth.js';
 
-describe('NewAuth entities', () => {
+describe('NewAuth entity', () => {
   it('should throw error when payload not contain needed property', () => {
     // Arrange
     const payload = {
@@ -22,7 +22,7 @@ describe('NewAuth entities', () => {
     expect(() => new NewAuth(payload)).toThrowError('NEW_AUTH.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
-  it('should create NewAuth entities correctly', () => {
+  it('should create NewAuth entity correctly', () => {
     // Arrange
     const payload = {
       accessToken: 'access_token',

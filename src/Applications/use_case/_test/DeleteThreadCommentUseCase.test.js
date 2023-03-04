@@ -3,7 +3,7 @@ import ThreadCommentRepository from '../../../Domains/threads/ThreadCommentRepos
 import DeleteThreadCommentUseCase from '../DeleteThreadCommentUseCase.js';
 
 describe('DeleteThreadCommentUseCase', () => {
-  describe('_verifyParams function', () => {
+  describe('_validateParams function', () => {
     it('should throw error if params not contain needed property', async () => {
       // Arrange
       const useCaseParams = {

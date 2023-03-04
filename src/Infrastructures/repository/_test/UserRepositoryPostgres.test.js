@@ -24,7 +24,7 @@ describe('UserRepositoryPostgres', () => {
         fullname: 'Itte Monne',
       });
 
-      const fakeIdGenerator = () => '123'; // stub!
+      const fakeIdGenerator = () => '123';
       const userRepositoryPostgres = new UserRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
@@ -49,7 +49,7 @@ describe('UserRepositoryPostgres', () => {
         fullname,
       });
 
-      const fakeIdGenerator = () => '123'; // stub!
+      const fakeIdGenerator = () => '123';
       const userRepositoryPostgres = new UserRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
@@ -79,6 +79,7 @@ describe('UserRepositoryPostgres', () => {
       // Arrange
       const username = 'monne';
       const password = 'secret_password';
+
       const userRepositoryPostgres = new UserRepositoryPostgres(pool, {});
 
       await UsersTableTestHelper.addUser({
@@ -106,6 +107,7 @@ describe('UserRepositoryPostgres', () => {
       // Arrange
       const username = 'monne';
       const userId = 'user-123';
+
       const userRepositoryPostgres = new UserRepositoryPostgres(pool, {});
 
       await UsersTableTestHelper.addUser({id: userId, username});

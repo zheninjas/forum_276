@@ -87,7 +87,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
       return comments;
     }, {});
 
-    const comments = Object.values(groupComment).flatMap((row) => {
+    const comments = Object.values(groupComment).flatMap(function(row) {
       const {
         comment_id: id,
         comment_owner_username: username,

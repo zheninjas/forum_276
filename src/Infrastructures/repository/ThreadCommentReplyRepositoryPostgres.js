@@ -62,20 +62,6 @@ class ThreadCommentReplyRepositoryPostgres extends ThreadCommentReplyRepository 
 
   async verifyThreadCommentReply(threadCommentReplyId, threadCommentId, threadId) {
     const query = {
-      // text: `
-      //   SELECT
-      //     tcr.id as tcr_id,
-      //     tc.id as tc_id,
-      //     t.id as t_id
-      //   FROM
-      //     thread_comment_replies AS tcr
-      //   LEFT JOIN thread_comments AS tc ON tcr.thread_comment_id = tc.id
-      //     AND tc.id = $2
-      //   LEFT JOIN threads AS t ON tc.thread_id = t.id
-      //     AND t.id = $3
-      //   WHERE
-      //     tcr.id = $1
-      // `,
       text: `
         SELECT
           t.id as t_id,

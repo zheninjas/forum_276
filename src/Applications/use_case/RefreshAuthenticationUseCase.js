@@ -5,7 +5,7 @@ class RefreshAuthenticationUseCase {
   }
 
   async execute(useCasePayload) {
-    this._verifyPayload(useCasePayload);
+    this._validatePayload(useCasePayload);
 
     const {refreshToken} = useCasePayload;
 
@@ -17,11 +17,11 @@ class RefreshAuthenticationUseCase {
     return this._authenticationTokenManager.createAccessToken({username, id});
   }
 
-  _verifyPayload(payload) {
+  _validatePayload(payload) {
     const {refreshToken} = payload;
 
     if (!refreshToken) {
-      throw new Error('REFRESH_AUTHENTICATION_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN');
+      throw new Error('REFRESH_AUTHENTICATION_USE_CASE.PAYLOAD_NOT_CONTAIN_REFRESH_TOKEN');
     }
 
     if (typeof refreshToken !== 'string') {

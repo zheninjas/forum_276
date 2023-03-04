@@ -52,7 +52,6 @@ class UserRepositoryPostgres extends UserRepository {
     return rows[0].id;
   }
 
-
   async verifyAvailableUsername(username) {
     const query = {
       text: 'SELECT username FROM users WHERE username = $1',

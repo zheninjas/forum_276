@@ -814,11 +814,11 @@ describe('/threads endpoint', () => {
   });
 
   describe('when POST /threads/{threadId}/comments/{threadCommentId}/replies', () => {
-    it('should response 201 and new thread comment replies', async () => {
+    it('should response 201 and new thread comment reply', async () => {
       // Arrange
       const username = 'monne';
       const password = 'secret';
-      const content = 'replies comment content';
+      const content = 'reply comment content';
 
       const repliesPayload = {
         content,
@@ -859,11 +859,11 @@ describe('/threads endpoint', () => {
       });
     });
 
-    it('should response 400 when add new thread comment replies payload not contain needed property', async () => {
+    it('should response 400 when add new thread comment reply payload not contain needed property', async () => {
       // Arrange
       const username = 'monne';
       const password = 'secret';
-      const repliesPayload = {};
+      const replyPayload = {};
 
       const server = await createServer(container);
 
@@ -884,7 +884,7 @@ describe('/threads endpoint', () => {
         method: 'POST',
         url: `/threads/${threadId}/comments/${threadCommentId}/replies`,
         headers: authHeader,
-        payload: repliesPayload,
+        payload: replyPayload,
       });
 
       // Assert
@@ -895,11 +895,11 @@ describe('/threads endpoint', () => {
       expect(responseJson.message).toEqual('harus mengirimkan content');
     });
 
-    it('should response 400 when add new thread comment replies payload not meet data type specification', async () => {
+    it('should response 400 when add new thread comment reply payload not meet data type specification', async () => {
       // Arrange
       const username = 'monne';
       const password = 'secret';
-      const repliesPayload = {
+      const replyPayload = {
         content: 123,
       };
 
@@ -922,7 +922,7 @@ describe('/threads endpoint', () => {
         method: 'POST',
         url: `/threads/${threadId}/comments/${threadCommentId}/replies`,
         headers: authHeader,
-        payload: repliesPayload,
+        payload: replyPayload,
       });
 
       // Assert
@@ -933,10 +933,10 @@ describe('/threads endpoint', () => {
       expect(responseJson.message).toEqual('content harus string');
     });
 
-    it('should response 401 when add thread comment replies with invalid access token', async () => {
+    it('should response 401 when add thread comment reply with invalid access token', async () => {
       // Arrange
       const requestPayload = {
-        content: 'comment content',
+        content: 'reply comment content',
       };
 
       const server = await createServer(container);
@@ -959,10 +959,10 @@ describe('/threads endpoint', () => {
       expect(responseJson.message).toBeDefined();
     });
 
-    it('should response 401 when add thread comment replies with empty access token', async () => {
+    it('should response 401 when add thread comment reply with empty access token', async () => {
       // Arrange
       const requestPayload = {
-        content: 'comment content',
+        content: 'reply comment content',
       };
 
       const server = await createServer(container);
@@ -986,9 +986,9 @@ describe('/threads endpoint', () => {
       // Arrange
       const username = 'monne';
       const password = 'secret';
-      const content = 'replies comment content';
+      const content = 'reply comment content';
 
-      const repliesPayload = {
+      const replyPayload = {
         content,
       };
 
@@ -1005,7 +1005,7 @@ describe('/threads endpoint', () => {
         method: 'POST',
         url: `/threads/thread-123/comments/thread-comment-123/replies`,
         headers: authHeader,
-        payload: repliesPayload,
+        payload: replyPayload,
       });
 
       // Assert
@@ -1020,9 +1020,9 @@ describe('/threads endpoint', () => {
       // Arrange
       const username = 'monne';
       const password = 'secret';
-      const content = 'replies comment content';
+      const content = 'reply comment content';
 
-      const repliesPayload = {
+      const replyPayload = {
         content,
       };
 
@@ -1042,7 +1042,7 @@ describe('/threads endpoint', () => {
         method: 'POST',
         url: `/threads/${threadId}/comments/thread-comment-xxx/replies`,
         headers: authHeader,
-        payload: repliesPayload,
+        payload: replyPayload,
       });
 
       // Assert

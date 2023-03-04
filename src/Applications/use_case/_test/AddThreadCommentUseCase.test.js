@@ -1,11 +1,11 @@
 import {jest} from '@jest/globals';
 import NewThreadComment from '../../../Domains/threads/entities/NewThreadComment.js';
-import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import ThreadCommentRepository from '../../../Domains/threads/ThreadCommentRepository.js';
+import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import AddThreadCommentUseCase from '../AddThreadCommentUseCase.js';
 
 describe('AddThreadCommentUseCase', () => {
-  describe('_verifyPayload function', () => {
+  describe('_validatePayload function', () => {
     it('should throw error if use case payload not contain content', async () => {
       // Arrange
       const useCasePayload = {};
@@ -32,7 +32,7 @@ describe('AddThreadCommentUseCase', () => {
     });
   });
 
-  describe('_verifyParams function', () => {
+  describe('_validateParams function', () => {
     it('should throw error if params not contain threadId', async () => {
       // Arrange
       const useCasePayload = {
@@ -40,7 +40,6 @@ describe('AddThreadCommentUseCase', () => {
       };
 
       const useCaseParams = {};
-
       const addThreadCommentUseCase = new AddThreadCommentUseCase({});
 
       // Action & Assert
@@ -54,7 +53,6 @@ describe('AddThreadCommentUseCase', () => {
       const useCasePayload = {
         content: 'comment content',
       };
-
 
       const useCaseParams = {
         threadId: 123,
@@ -71,9 +69,9 @@ describe('AddThreadCommentUseCase', () => {
 
   it('should orchestrating the add thread comment action correctly', async () => {
     // Arrange
-    const content = 'comment content';
     const userAuthId = 'user-123';
     const threadId = 'thread-123';
+    const content = 'comment content';
 
     const useCasePayload = {
       content,
