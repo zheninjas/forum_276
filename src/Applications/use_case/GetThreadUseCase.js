@@ -16,6 +16,12 @@ class GetThreadUseCase {
       if (threadCommentDetail.isDelete) {
         threadCommentDetail.content = '**komentar telah dihapus**';
       }
+
+      threadCommentDetail.replies.map((threadCommentReplyDetail) => {
+        if (threadCommentReplyDetail.isDelete) {
+          threadCommentReplyDetail.content = '**balasan telah dihapus**';
+        }
+      });
     });
 
     return threadDetail;

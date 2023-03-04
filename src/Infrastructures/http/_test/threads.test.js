@@ -69,6 +69,24 @@ describe('/threads endpoint', () => {
     return threadCommentId;
   };
 
+  const addReply = async (server, authHeader, {threadId, threadCommentId}, payload) => {
+    const response = await server.inject({
+      method: 'POST',
+      url: `/threads/${threadId}/comments/${threadCommentId}/replies`,
+      headers: authHeader,
+      payload: payload,
+    });
+
+    // Assert
+    const {
+      data: {
+        addedReply: {id: threadCommentReplyId},
+      },
+    } = JSON.parse(response.payload);
+
+    return threadCommentReplyId;
+  };
+
   afterAll(async () => {
     await pool.end();
   });
@@ -611,7 +629,7 @@ describe('/threads endpoint', () => {
   });
 
   describe('when DELETE /threads/{threadId}/comments/{threadCommentId}', () => {
-    it('should response 200 and selected comment from thread got deleted if user authorized the comment', async () => {
+    it('should response 200 and comment from thread got deleted if user authorized the comment', async () => {
       // Arrange
       const username = 'monne';
       const password = 'secret';
@@ -1033,6 +1051,241 @@ describe('/threads endpoint', () => {
       expect(response.statusCode).toEqual(404);
       expect(responseJson.status).toEqual('fail');
       expect(responseJson.message).toEqual('komentar tidak ditemukan');
+    });
+  });
+
+  describe('when DELETE /threads/{threadId}/comments/{threadCommentId}/replies/{threadCommentReplyId}', () => {
+    it('should response 200 and reply from thread comment got deleted if user authorized the reply', async () => {
+      // Arrange
+      const username = 'monne';
+      const password = 'secret';
+
+      const server = await createServer(container);
+
+      // Add user
+      await createUser(server, {username, password, fullname: 'Itte Monne'});
+
+      // Login user
+      const authHeader = await loginUser(server, {username, password});
+
+      // Add thread
+      const threadId = await addThread(server, authHeader, {title: 'Thread Title', body: 'Thread Body'});
+
+      // Add comment
+      const threadCommentId = await addComment(server, authHeader, {threadId}, {content: 'comment content'});
+
+      // Add reply
+      const threadCommentReplyId = await addReply(
+        server,
+        authHeader,
+        {threadId, threadCommentId},
+        {content: 'reply comment content'},
+      );
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadId}/comments/${threadCommentId}/replies/${threadCommentReplyId}`,
+        headers: authHeader,
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual('success');
+    });
+
+    it('should response 401 when delete comment with invalid access token', async () => {
+      // Arrange
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: '/threads/thread-123/comments/thread-comment-123/replies/thread-comment-reply-123',
+        headers: {
+          Authorization: `Bearer invalid_token`,
+        },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+
+      expect(response.statusCode).toEqual(401);
+      expect(responseJson.error).toEqual('Unauthorized');
+      expect(responseJson.message).toBeDefined();
+    });
+
+    it('should response 401 when delete comment with no access token', async () => {
+      // Arrange
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: '/threads/thread-123/comments/thread-comment-123/replies/thread-comment-reply-123',
+        payload: {},
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+
+      expect(response.statusCode).toEqual(401);
+      expect(responseJson.error).toEqual('Unauthorized');
+      expect(responseJson.message).toBeDefined();
+    });
+
+    it('should response 403 when unauthorized user tries to delete an unauthorized comment', async () => {
+      // Arrange
+      const users = {
+        one: {
+          username: 'user_one',
+          password: 'secret',
+          fullname: 'User One',
+        },
+        two: {
+          username: 'user_two',
+          password: 'secret',
+          fullname: 'User Two',
+        },
+      };
+
+      const server = await createServer(container);
+
+      // Add users
+      await createUser(server, users.one);
+      await createUser(server, users.two);
+
+      // Login users
+      const authHeaderUserOne = await loginUser(server, {username: users.one.username, password: users.one.password});
+      const authHeaderUserTwo = await loginUser(server, {username: users.two.username, password: users.two.password});
+
+      // Add thread with user one
+      const threadIdUserOne = await addThread(server, authHeaderUserOne, {title: 'Thread Title', body: 'Thread Body'});
+
+      // Add comment with user one
+      const threadCommentIdUserOne = await addComment(
+        server,
+        authHeaderUserOne,
+        {threadId: threadIdUserOne},
+        {content: 'comment content one'},
+      );
+
+      // Add reply with user one
+      const threadCommentReplyIdUserOne = await addReply(
+        server,
+        authHeaderUserOne,
+        {threadId: threadIdUserOne, threadCommentId: threadCommentIdUserOne},
+        {content: 'reply comment of content one'},
+      );
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadIdUserOne}/comments/${threadCommentIdUserOne}/replies/${threadCommentReplyIdUserOne}`,
+        headers: authHeaderUserTwo,
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+
+      expect(response.statusCode).toEqual(403);
+      expect(responseJson.status).toEqual('fail');
+      expect(responseJson.message).toEqual('anda tidak berhak mengakses resource ini');
+    });
+
+    it('should response 404 when there is no thread for the comment to be deleted', async () => {
+      // Arrange
+      const username = 'monne';
+      const password = 'secret';
+
+      const server = await createServer(container);
+
+      // Add user
+      await createUser(server, {username, password, fullname: 'Itte Monne'});
+
+      // Login user
+      const authHeader = await loginUser(server, {username, password});
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: '/threads/thread-xxx/comments/thread-comment-xxx/replies/thread-comment-reply-xxx',
+        headers: authHeader,
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual('fail');
+      expect(responseJson.message).toEqual('thread tidak ditemukan');
+    });
+
+    it('should response 404 when there is no comment for the reply to be deleted', async () => {
+      // Arrange
+      const username = 'monne';
+      const password = 'secret';
+
+      const server = await createServer(container);
+
+      // Add user
+      await createUser(server, {username, password, fullname: 'Itte Monne'});
+
+      // Login user
+      const authHeader = await loginUser(server, {username, password});
+
+      // Add thread
+      const threadId = await addThread(server, authHeader, {title: 'Thread Title', body: 'Thread Body'});
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadId}/comments/thread-comment-xxx/replies/thread-comment-reply-xxx`,
+        headers: authHeader,
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual('fail');
+      expect(responseJson.message).toEqual('komentar tidak ditemukan');
+    });
+
+    it('should response 404 when the reply to be deleted does not exist', async () => {
+      // Arrange
+      const username = 'monne';
+      const password = 'secret';
+
+      const server = await createServer(container);
+
+      // Add user
+      await createUser(server, {username, password, fullname: 'Itte Monne'});
+
+      // Login user
+      const authHeader = await loginUser(server, {username, password});
+
+      // Add thread
+      const threadId = await addThread(server, authHeader, {title: 'Thread Title', body: 'Thread Body'});
+
+      // Add comment
+      const threadCommentId = await addComment(server, authHeader, {threadId}, {content: 'comment content'});
+
+      // Action
+      const response = await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadId}/comments/${threadCommentId}/replies/thread-comment-reply-xxx`,
+        headers: authHeader,
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual('fail');
+      expect(responseJson.message).toEqual('balasan tidak ditemukan');
     });
   });
 });

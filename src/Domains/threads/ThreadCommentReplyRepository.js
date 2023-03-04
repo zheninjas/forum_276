@@ -11,7 +11,7 @@ class ThreadCommentReplyRepository {
     throw new Error('THREAD_COMMENT_REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
-  async verifyReply(threadCommentReplyId, threadCommentId) {
+  async verifyThreadCommentReply(threadCommentReplyId, threadCommentId, threadId) {
     throw new Error('THREAD_COMMENT_REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 }

@@ -3,6 +3,7 @@ import AddThreadCommentReplyUseCase from '../../../../Applications/use_case/AddT
 import AddThreadCommentUseCase from '../../../../Applications/use_case/AddThreadCommentUseCase.js';
 import AddThreadUseCase from '../../../../Applications/use_case/AddThreadUseCase.js';
 import DeleteThreadCommentUseCase from '../../../../Applications/use_case/DeleteThreadCommentUseCase.js';
+import DeleteThreadCommentReplyUseCase from '../../../../Applications/use_case/DeleteThreadCommentReplyUseCase.js';
 import GetThreadUseCase from '../../../../Applications/use_case/GetThreadUseCase.js';
 
 class ThreadsHandler {
@@ -84,6 +85,16 @@ class ThreadsHandler {
 
     response.code(201);
     return response;
+  }
+
+  async deleteThreadCommentReplyHandler(request, _) {
+    const deleteThreadCommentReplyUseCase = this._container.getInstance(DeleteThreadCommentReplyUseCase.name);
+
+    await deleteThreadCommentReplyUseCase.execute(request.params, request.auth.credentials);
+
+    return {
+      status: 'success',
+    };
   }
 }
 

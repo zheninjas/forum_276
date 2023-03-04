@@ -48,17 +48,22 @@ class ThreadRepositoryPostgres extends ThreadRepository {
           replies.is_delete as reply_deleted
         FROM
           threads
-        JOIN users AS thread_user ON threads.owner = thread_user.id
-        LEFT JOIN thread_comments AS comments ON threads.id = comments.thread_id
-        LEFT JOIN users AS comment_user ON comments.owner = comment_user.id
-        LEFT JOIN thread_comment_replies AS replies ON comments.id = replies.thread_comment_id
-        LEFT JOIN users AS reply_user ON replies.owner = reply_user.id
+        JOIN users AS thread_user
+          ON threads.owner = thread_user.id
+        LEFT JOIN thread_comments AS comments
+          ON threads.id = comments.thread_id
+        LEFT JOIN users AS comment_user
+          ON comments.owner = comment_user.id
+        LEFT JOIN thread_comment_replies AS replies
+          ON comments.id = replies.thread_comment_id
+        LEFT JOIN users AS reply_user
+          ON replies.owner = reply_user.id
         WHERE
           threads.id = $1
         GROUP BY
           replies.id, reply_owner_username, comments.id, comment_owner_username, threads.id, thread_owner_username
         ORDER BY
-          comments.date
+          threads.date, comments.date, replies.date
       `,
       values: [threadId],
     };

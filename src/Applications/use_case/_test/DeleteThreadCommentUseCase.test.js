@@ -34,7 +34,7 @@ describe('DeleteThreadCommentUseCase', () => {
     });
   });
 
-  it('should orchestrating the delete thread action correctly', async () => {
+  it('should orchestrating the delete thread comment action correctly', async () => {
     // Arrange
     const userAuthId = 'user-123';
     const threadId = 'thread-123';

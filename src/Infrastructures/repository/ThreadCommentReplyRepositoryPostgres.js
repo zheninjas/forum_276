@@ -60,16 +60,53 @@ class ThreadCommentReplyRepositoryPostgres extends ThreadCommentReplyRepository 
     }
   }
 
-  async verifyReply(threadCommentReplyId, threadCommentId) {
+  async verifyThreadCommentReply(threadCommentReplyId, threadCommentId, threadId) {
     const query = {
-      text: 'SELECT id FROM thread_comment_replies WHERE id = $1 AND thread_comment_id = $2',
-      values: [threadCommentReplyId, threadCommentId],
+      // text: `
+      //   SELECT
+      //     tcr.id as tcr_id,
+      //     tc.id as tc_id,
+      //     t.id as t_id
+      //   FROM
+      //     thread_comment_replies AS tcr
+      //   LEFT JOIN thread_comments AS tc ON tcr.thread_comment_id = tc.id
+      //     AND tc.id = $2
+      //   LEFT JOIN threads AS t ON tc.thread_id = t.id
+      //     AND t.id = $3
+      //   WHERE
+      //     tcr.id = $1
+      // `,
+      text: `
+        SELECT
+          t.id as t_id,
+          tc.id as tc_id,
+          tcr.id as tcr_id
+        FROM
+          threads AS t
+        LEFT JOIN thread_comments AS tc ON t.id = tc.thread_id
+          AND tc.id = $2
+        LEFT JOIN thread_comment_replies AS tcr ON tc.id = tcr.thread_comment_id
+          AND tcr.id = $1
+        WHERE
+          t.id = $3
+      `,
+      values: [threadCommentReplyId, threadCommentId, threadId],
     };
 
-    const {rowCount} = await this._pool.query(query);
+    const {rows, rowCount} = await this._pool.query(query);
 
     if (!rowCount) {
-      throw new NotFoundError('komentar reply tidak ditemukan');
+      throw new NotFoundError('thread tidak ditemukan');
+    }
+
+    const {tc_id: tcId, tcr_id: tcrId} = rows[0];
+
+    if (!tcId) {
+      throw new NotFoundError('komentar tidak ditemukan');
+    }
+
+    if (!tcrId) {
+      throw new NotFoundError('balasan tidak ditemukan');
     }
   }
 }

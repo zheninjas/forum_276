@@ -166,7 +166,7 @@ describe('ThreadCommentReplyRepositoryPostgres', () => {
     });
   });
 
-  describe('verifyReply function', () => {
+  describe('verifyThreadCommentReply function', () => {
     it('should throw NotFoundError when thread for comment reply not found', async () => {
       // Arrange
       const threadCommentReplyId = 'thread-comment-reply-123';
@@ -182,7 +182,34 @@ describe('ThreadCommentReplyRepositoryPostgres', () => {
 
       // Action & Assert
       await expect(
-        threadCommentReplyRepositoryPostgres.verifyReply(threadCommentReplyId, 'thread-xxx'),
+        threadCommentReplyRepositoryPostgres.verifyThreadCommentReply(
+          threadCommentReplyId,
+          threadCommentId,
+          'thread-xxx',
+        ),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    it('should throw NotFoundError when thread comment for reply not found', async () => {
+      // Arrange
+      const threadCommentReplyId = 'thread-comment-reply-123';
+
+      await ThreadCommentRepliesTableTestHelper.addReply({
+        id: threadCommentReplyId,
+        content: 'comment content reply',
+        threadCommentId,
+        owner: userId,
+      });
+
+      const threadCommentReplyRepositoryPostgres = new ThreadCommentReplyRepositoryPostgres(pool);
+
+      // Action & Assert
+      await expect(
+        threadCommentReplyRepositoryPostgres.verifyThreadCommentReply(
+          threadCommentReplyId,
+          'thread-comment-xxx',
+          threadId,
+        ),
       ).rejects.toThrow(NotFoundError);
     });
 
@@ -192,7 +219,11 @@ describe('ThreadCommentReplyRepositoryPostgres', () => {
 
       // Action & Assert
       await expect(
-        threadCommentReplyRepositoryPostgres.verifyReply('thread-comment-reply-xxx', threadCommentId),
+        threadCommentReplyRepositoryPostgres.verifyThreadCommentReply(
+          'thread-comment-reply-xxx',
+          threadCommentId,
+          threadId,
+        ),
       ).rejects.toThrow(NotFoundError);
     });
 
@@ -211,7 +242,7 @@ describe('ThreadCommentReplyRepositoryPostgres', () => {
 
       // Action & Assert
       await expect(
-        threadCommentReplyRepositoryPostgres.verifyReply(threadCommentReplyId, threadCommentId),
+        threadCommentReplyRepositoryPostgres.verifyThreadCommentReply(threadCommentReplyId, threadCommentId, threadId),
       ).resolves.not.toThrow(NotFoundError);
     });
   });
