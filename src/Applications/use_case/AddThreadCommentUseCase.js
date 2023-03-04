@@ -1,18 +1,16 @@
-import UserCredential from '../../Domains/users/entities/UserCredential.js';
-
 class AddThreadCommentUseCase {
   constructor({threadRepository, threadCommentRepository}) {
     this._threadRepository = threadRepository;
     this._threadCommentRepository = threadCommentRepository;
   }
 
-  async execute(useCasePayload, useCaseParams, useAuthCredential) {
+  async execute(useCasePayload, useCaseParams, userId) {
     this._validatePayload(useCasePayload);
     this._validateParams(useCaseParams);
+    this._validateUserId(userId);
 
     const {content} = useCasePayload;
     const {threadId} = useCaseParams;
-    const {userId} = new UserCredential(useAuthCredential);
 
     await this._threadRepository.verifyThread(threadId);
 
@@ -40,6 +38,16 @@ class AddThreadCommentUseCase {
 
     if (typeof threadId !== 'string') {
       throw new Error('ADD_THREAD_COMMENT_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION');
+    }
+  }
+
+  _validateUserId(userId) {
+    if (!userId) {
+      throw new Error('ADD_THREAD_COMMENT_USE_CASE.USER_ID_NOT_FOUND');
+    }
+
+    if (typeof userId !== 'string') {
+      throw new Error('ADD_THREAD_COMMENT_USE_CASE.WRONG_USER_ID_DATA_TYPE');
     }
   }
 }

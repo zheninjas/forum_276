@@ -41,15 +41,15 @@ DomainErrorTranslator._directories = {
     'refresh token harus string',
   ),
 
-  // UserCredential entity
-  'USER_CREDENTIAL.NOT_CONTAIN_AUTH_USER_ID': new InvariantError('autentikasi user tidak ditemukan'),
-  'USER_CREDENTIAL.AUTH_USER_ID_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
-    'format autentikasi user tidak sesuai',
-  ),
-
   // InsertThread entity
   'INSERT_THREAD.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('harus mengirimkan title dan body'),
   'INSERT_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('title dan body harus string'),
+
+  // AddThreadUseCase userId
+  'ADD_THREAD_USE_CASE.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
+  'ADD_THREAD_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError(
+    'user id harus berupa string',
+  ),
 
   // AddThreadCommentUseCase
   'ADD_THREAD_COMMENT_USE_CASE.PAYLOAD_NOT_CONTAIN_CONTENT': new InvariantError('harus mengirimkan content'),
@@ -63,10 +63,22 @@ DomainErrorTranslator._directories = {
     'thread id harus berupa string',
   ),
 
+  // AddThreadCommentUseCase userId
+  'ADD_THREAD_COMMENT_USE_CASE.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
+  'ADD_THREAD_COMMENT_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError(
+    'user id harus berupa string',
+  ),
+
   // DeleteThreadCommentUseCase params
   'DELETE_THREAD_COMMENT_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('parameter tidak lengkap'),
   'DELETE_THREAD_COMMENT_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
     'parameter harus berupa string',
+  ),
+
+  // DeleteThreadCommentUseCase userId
+  'DELETE_THREAD_COMMENT_USE_CASE.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
+  'DELETE_THREAD_COMMENT_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError(
+    'user id harus berupa string',
   ),
 
   // AddThreadCommentReplyUseCase
@@ -81,12 +93,24 @@ DomainErrorTranslator._directories = {
     'parameter harus berupa string',
   ),
 
+  // AddThreadCommentReplyUseCase userId
+  'ADD_THREAD_COMMENT_REPLY_USE_CASE.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
+  'ADD_THREAD_COMMENT_REPLY_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError(
+    'user id harus berupa string',
+  ),
+
   // DeleteThreadCommentReplyUseCase params
   'DELETE_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
     'parameter tidak lengkap',
   ),
   'DELETE_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
     'parameter harus berupa string',
+  ),
+
+  // DeleteThreadCommentReplyUseCase userId
+  'DELETE_THREAD_COMMENT_REPLY_USE_CASE.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
+  'DELETE_THREAD_COMMENT_REPLY_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError(
+    'user id harus berupa string',
   ),
 };
 

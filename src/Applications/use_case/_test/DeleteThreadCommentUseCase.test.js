@@ -34,6 +34,39 @@ describe('DeleteThreadCommentUseCase', () => {
     });
   });
 
+  describe('_validateUserId function', () => {
+    it('should throw error if userId undefined', async () => {
+      // Arrange
+      const useCaseParams = {
+        threadId: 'thread-123',
+        threadCommentId: 'thread-comment-123',
+      };
+
+      const deleteThreadCommentUseCase = new DeleteThreadCommentUseCase({});
+
+      // Action & Assert
+      await expect(deleteThreadCommentUseCase.execute(useCaseParams)).rejects.toThrowError(
+        'DELETE_THREAD_COMMENT_USE_CASE.USER_ID_NOT_FOUND',
+      );
+    });
+
+    it('should throw error if userId not string', async () => {
+      // Arrange
+      const useCaseParams = {
+        threadId: 'thread-123',
+        threadCommentId: 'thread-comment-123',
+      };
+
+      const userId = 123;
+      const deleteThreadCommentUseCase = new DeleteThreadCommentUseCase({});
+
+      // Action & Assert
+      await expect(deleteThreadCommentUseCase.execute(useCaseParams, userId)).rejects.toThrowError(
+        'DELETE_THREAD_COMMENT_USE_CASE.WRONG_USER_ID_DATA_TYPE',
+      );
+    });
+  });
+
   it('should orchestrating the delete thread comment action correctly', async () => {
     // Arrange
     const userAuthId = 'user-123';
@@ -43,10 +76,6 @@ describe('DeleteThreadCommentUseCase', () => {
     const useCaseParams = {
       threadId,
       threadCommentId,
-    };
-
-    const userAuthCredential = {
-      id: userAuthId,
     };
 
     const mockThreadCommentRepository = new ThreadCommentRepository();
@@ -60,7 +89,7 @@ describe('DeleteThreadCommentUseCase', () => {
     });
 
     // Action
-    await deleteThreadCommentUseCase.execute(useCaseParams, userAuthCredential);
+    await deleteThreadCommentUseCase.execute(useCaseParams, userAuthId);
 
     // Assert
     expect(mockThreadCommentRepository.verifyComment).toBeCalledWith(threadCommentId, threadId);

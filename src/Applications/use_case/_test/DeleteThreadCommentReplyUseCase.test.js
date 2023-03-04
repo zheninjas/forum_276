@@ -36,6 +36,41 @@ describe('DeleteThreadCommentReplyUseCase', () => {
     });
   });
 
+  describe('_validateUserId function', () => {
+    it('should throw error if userId undefined', async () => {
+      // Arrange
+      const useCaseParams = {
+        threadId: 'thread-123',
+        threadCommentId: 'thread-comment-123',
+        threadCommentReplyId: 'thread-comment-reply-123',
+      };
+
+      const deleteThreadCommentReplyUseCase = new DeleteThreadCommentReplyUseCase({});
+
+      // Action & Assert
+      await expect(deleteThreadCommentReplyUseCase.execute(useCaseParams)).rejects.toThrowError(
+        'DELETE_THREAD_COMMENT_REPLY_USE_CASE.USER_ID_NOT_FOUND',
+      );
+    });
+
+    it('should throw error if userId not string', async () => {
+      // Arrange
+      const useCaseParams = {
+        threadId: 'thread-123',
+        threadCommentId: 'thread-comment-123',
+        threadCommentReplyId: 'thread-comment-reply-123',
+      };
+
+      const userId = 123;
+      const deleteThreadCommentReplyUseCase = new DeleteThreadCommentReplyUseCase({});
+
+      // Action & Assert
+      await expect(deleteThreadCommentReplyUseCase.execute(useCaseParams, userId)).rejects.toThrowError(
+        'DELETE_THREAD_COMMENT_REPLY_USE_CASE.WRONG_USER_ID_DATA_TYPE',
+      );
+    });
+  });
+
   it('should orchestrating the delete thread comment reply action correctly', async () => {
     // Arrange
     const userAuthId = 'user-123';
@@ -49,10 +84,6 @@ describe('DeleteThreadCommentReplyUseCase', () => {
       threadCommentReplyId,
     };
 
-    const userAuthCredential = {
-      id: userAuthId,
-    };
-
     const mockThreadCommentReplyRepository = new ThreadCommentReplyRepository();
 
     mockThreadCommentReplyRepository.verifyThreadCommentReply = jest.fn().mockImplementation(() => Promise.resolve());
@@ -64,7 +95,7 @@ describe('DeleteThreadCommentReplyUseCase', () => {
     });
 
     // Action
-    await deleteThreadCommentReplyUseCase.execute(useCaseParams, userAuthCredential);
+    await deleteThreadCommentReplyUseCase.execute(useCaseParams, userAuthId);
 
     // Assert
     expect(mockThreadCommentReplyRepository.verifyThreadCommentReply).toBeCalledWith(

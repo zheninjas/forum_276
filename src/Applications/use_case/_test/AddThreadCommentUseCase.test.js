@@ -67,6 +67,45 @@ describe('AddThreadCommentUseCase', () => {
     });
   });
 
+  describe('_validateUserId function', () => {
+    it('should throw error if userId undefined', async () => {
+      // Arrange
+      const useCasePayload = {
+        content: 'comment content',
+      };
+
+      const useCaseParams = {
+        threadId: 'thread-123',
+      };
+
+      const addThreadCommentUseCase = new AddThreadCommentUseCase({});
+
+      // Action & Assert
+      await expect(addThreadCommentUseCase.execute(useCasePayload, useCaseParams)).rejects.toThrowError(
+        'ADD_THREAD_COMMENT_USE_CASE.USER_ID_NOT_FOUND',
+      );
+    });
+
+    it('should throw error if userId not string', async () => {
+      // Arrange
+      const useCasePayload = {
+        content: 'comment content',
+      };
+
+      const useCaseParams = {
+        threadId: 'thread-123',
+      };
+
+      const userId = 123;
+      const addThreadCommentUseCase = new AddThreadCommentUseCase({});
+
+      // Action & Assert
+      await expect(addThreadCommentUseCase.execute(useCasePayload, useCaseParams, userId)).rejects.toThrowError(
+        'ADD_THREAD_COMMENT_USE_CASE.WRONG_USER_ID_DATA_TYPE',
+      );
+    });
+  });
+
   it('should orchestrating the add thread comment action correctly', async () => {
     // Arrange
     const userAuthId = 'user-123';
@@ -79,10 +118,6 @@ describe('AddThreadCommentUseCase', () => {
 
     const useCaseParams = {
       threadId,
-    };
-
-    const userAuthCredential = {
-      id: userAuthId,
     };
 
     const mockNewThreadComment = new NewThreadComment({
@@ -109,7 +144,7 @@ describe('AddThreadCommentUseCase', () => {
     });
 
     // Action
-    const addedThreadComment = await addThreadCommentUseCase.execute(useCasePayload, useCaseParams, userAuthCredential);
+    const addedThreadComment = await addThreadCommentUseCase.execute(useCasePayload, useCaseParams, userAuthId);
 
     // Assert
     expect(addedThreadComment).toStrictEqual(expectedNewThreadComment);

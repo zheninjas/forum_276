@@ -14,8 +14,9 @@ class ThreadsHandler {
   }
 
   async postThreadHandler(request, h) {
+    const {id: userId} = request.auth.credentials;
     const addThreadUseCase = this._container.getInstance(AddThreadUseCase.name);
-    const addedThread = await addThreadUseCase.execute(request.payload, request.auth.credentials);
+    const addedThread = await addThreadUseCase.execute(request.payload, userId);
     const response = h.response({
       status: 'success',
       data: {
@@ -40,11 +41,12 @@ class ThreadsHandler {
   }
 
   async postThreadCommentHandler(request, h) {
+    const {id: userId} = request.auth.credentials;
     const addThreadCommentUseCase = this._container.getInstance(AddThreadCommentUseCase.name);
     const addedComment = await addThreadCommentUseCase.execute(
       request.payload,
       request.params,
-      request.auth.credentials,
+      userId,
     );
 
     const response = h.response({
@@ -59,9 +61,10 @@ class ThreadsHandler {
   }
 
   async deleteThreadCommentHandler(request, _) {
+    const {id: userId} = request.auth.credentials;
     const deleteThreadCommentUseCase = this._container.getInstance(DeleteThreadCommentUseCase.name);
 
-    await deleteThreadCommentUseCase.execute(request.params, request.auth.credentials);
+    await deleteThreadCommentUseCase.execute(request.params, userId);
 
     return {
       status: 'success',
@@ -69,11 +72,12 @@ class ThreadsHandler {
   }
 
   async postThreadCommentReplyHandler(request, h) {
+    const {id: userId} = request.auth.credentials;
     const addThreadCommentReplyUseCase = this._container.getInstance(AddThreadCommentReplyUseCase.name);
     const addedReply = await addThreadCommentReplyUseCase.execute(
       request.payload,
       request.params,
-      request.auth.credentials,
+      userId,
     );
 
     const response = h.response({
@@ -88,9 +92,10 @@ class ThreadsHandler {
   }
 
   async deleteThreadCommentReplyHandler(request, _) {
+    const {id: userId} = request.auth.credentials;
     const deleteThreadCommentReplyUseCase = this._container.getInstance(DeleteThreadCommentReplyUseCase.name);
 
-    await deleteThreadCommentReplyUseCase.execute(request.params, request.auth.credentials);
+    await deleteThreadCommentReplyUseCase.execute(request.params, userId);
 
     return {
       status: 'success',

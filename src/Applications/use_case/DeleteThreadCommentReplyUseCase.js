@@ -1,23 +1,17 @@
-import UserCredential from '../../Domains/users/entities/UserCredential.js';
-
 class DeleteThreadCommentReplyUseCase {
   constructor({threadCommentReplyRepository}) {
     this._threadCommentReplyRepository = threadCommentReplyRepository;
   }
 
-  async execute(useCaseParams, userAuthCredential) {
+  async execute(useCaseParams, userId) {
     this._validateParams(useCaseParams);
+    this._validateUserId(userId);
 
     const {threadId, threadCommentId, threadCommentReplyId} = useCaseParams;
-    const {userId} = new UserCredential(userAuthCredential);
 
     await this._threadCommentReplyRepository.verifyThreadCommentReply(threadCommentReplyId, threadCommentId, threadId);
     await this._threadCommentReplyRepository.verifyReplyOwner(threadCommentReplyId, userId);
-    await this._threadCommentReplyRepository.softDeleteReply(
-      threadCommentReplyId,
-      threadCommentId,
-      userId,
-    );
+    await this._threadCommentReplyRepository.softDeleteReply(threadCommentReplyId, threadCommentId, userId);
   }
 
   _validateParams(useCaseParams) {
@@ -33,6 +27,16 @@ class DeleteThreadCommentReplyUseCase {
       typeof threadCommentReplyId !== 'string'
     ) {
       throw new Error('DELETE_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION');
+    }
+  }
+
+  _validateUserId(userId) {
+    if (!userId) {
+      throw new Error('DELETE_THREAD_COMMENT_REPLY_USE_CASE.USER_ID_NOT_FOUND');
+    }
+
+    if (typeof userId !== 'string') {
+      throw new Error('DELETE_THREAD_COMMENT_REPLY_USE_CASE.WRONG_USER_ID_DATA_TYPE');
     }
   }
 }
