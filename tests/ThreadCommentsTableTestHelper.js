@@ -17,6 +17,27 @@ const ThreadCommentsTableTestHelper = {
     await pool.query(query);
   },
 
+  async softDeleteComment({id, threadId, owner}) {
+    const query = {
+      text: `
+        UPDATE
+          thread_comments
+        SET
+          is_delete = true
+        WHERE
+          id = $1 AND
+          thread_id = $2 AND
+          owner = $3 AND
+          is_delete = false
+        RETURNING
+          id
+      `,
+      values: [id, threadId, owner],
+    };
+
+    await pool.query(query);
+  },
+
   async findThreadCommentsById(threadId, id) {
     const query = {
       text: 'SELECT * FROM thread_comments WHERE thread_id = $1 AND id = $2',

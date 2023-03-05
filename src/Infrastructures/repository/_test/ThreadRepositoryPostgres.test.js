@@ -5,8 +5,6 @@ import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
 import NotFoundError from '../../../Commons/exceptions/NotFoundError.js';
 import InsertThread from '../../../Domains/threads/entities/InsertThread.js';
 import NewThread from '../../../Domains/threads/entities/NewThread.js';
-import ThreadCommentDetail from '../../../Domains/threads/entities/ThreadCommentDetail.js';
-import ThreadCommentReplyDetail from '../../../Domains/threads/entities/ThreadCommentReplyDetail.js';
 import ThreadDetail from '../../../Domains/threads/entities/ThreadDetail.js';
 import pool from '../../database/postgres/pool.js';
 import ThreadRepositoryPostgres from '../ThreadRepositoryPostgres.js';
@@ -107,12 +105,20 @@ describe('ThreadRepositoryPostgres', () => {
         date: '2023-02-25T08:10:00.800Z',
       };
 
-      const threadCommentTwoReply = {
+      const threadCommentTwoReplyOne = {
         id: 'thread-comment-reply-123',
         content: 'reply comment content two',
         threadCommentId: threadCommentTwo.id,
         owner: userOne.id,
         date: '2023-02-25T08:15:00.800Z',
+      };
+
+      const threadCommentTwoReplyTwo = {
+        id: 'thread-comment-reply-234',
+        content: 'reply two comment content two',
+        threadCommentId: threadCommentTwo.id,
+        owner: userTwo.id,
+        date: '2023-02-25T08:20:00.800Z',
       };
 
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool);
@@ -121,75 +127,72 @@ describe('ThreadRepositoryPostgres', () => {
       await UsersTableTestHelper.addUser({...userTwo});
       await ThreadsTableTestHelper.addThread({...thread});
       await ThreadCommentsTableTestHelper.addComment({...threadCommentOne});
+      await ThreadCommentsTableTestHelper.softDeleteComment({...threadCommentOne});
       await ThreadCommentsTableTestHelper.addComment({...threadCommentTwo});
-      await ThreadCommentRepliesTableTestHelper.addReply({...threadCommentTwoReply});
+      await ThreadCommentRepliesTableTestHelper.addReply({...threadCommentTwoReplyOne});
+      await ThreadCommentRepliesTableTestHelper.addReply({...threadCommentTwoReplyTwo});
+      await ThreadCommentRepliesTableTestHelper.softDeleteReply({...threadCommentTwoReplyTwo});
 
       // Action
       const threadDetail = await threadRepositoryPostgres.getThreadWithComments(thread.id);
 
       // Assert
       expect(threadDetail).toStrictEqual(
-        new ThreadDetail({
-          id: thread.id,
-          title: thread.title,
-          body: thread.body,
-          date: thread.date,
-          username: userOne.username,
-          comments: [
-            new ThreadCommentDetail({
-              id: threadCommentOne.id,
-              username: userOne.username,
-              date: threadCommentOne.date,
-              content: threadCommentOne.content,
-              is_delete: false,
-              replies: [],
-            }),
-            new ThreadCommentDetail({
-              id: threadCommentTwo.id,
-              username: userTwo.username,
-              date: threadCommentTwo.date,
-              content: threadCommentTwo.content,
-              is_delete: false,
-              replies: [
-                new ThreadCommentReplyDetail({
-                  id: threadCommentTwoReply.id,
-                  username: userOne.username,
-                  date: threadCommentTwoReply.date,
-                  content: threadCommentTwoReply.content,
-                  is_delete: false,
-                }),
-              ],
-            }),
-          ],
-        }),
+        new ThreadDetail([
+          {
+            thread_id: thread.id,
+            thread_title: thread.title,
+            thread_body: thread.body,
+            thread_date: thread.date,
+            thread_owner_username: userOne.username,
+            comment_id: threadCommentOne.id,
+            comment_owner_username: userOne.username,
+            comment_date: threadCommentOne.date,
+            comment_content: '**komentar telah dihapus**',
+            comment_deleted: true,
+            reply_id: null,
+            reply_owner_username: null,
+            reply_date: null,
+            reply_content: null,
+            reply_deleted: null,
+          },
+          {
+            thread_id: thread.id,
+            thread_title: thread.title,
+            thread_body: thread.body,
+            thread_date: thread.date,
+            thread_owner_username: userOne.username,
+            comment_id: threadCommentTwo.id,
+            comment_owner_username: userTwo.username,
+            comment_date: threadCommentTwo.date,
+            comment_content: threadCommentTwo.content,
+            comment_deleted: false,
+            reply_id: threadCommentTwoReplyOne.id,
+            reply_owner_username: userOne.username,
+            reply_date: threadCommentTwoReplyOne.date,
+            reply_content: threadCommentTwoReplyOne.content,
+            reply_deleted: false,
+          },
+          {
+            thread_id: thread.id,
+            thread_title: thread.title,
+            thread_body: thread.body,
+            thread_date: thread.date,
+            thread_owner_username: userOne.username,
+            thread_owner_username: userOne.username,
+            comment_id: threadCommentTwo.id,
+            comment_owner_username: userTwo.username,
+            comment_date: threadCommentTwo.date,
+            comment_content: threadCommentTwo.content,
+            comment_deleted: false,
+            reply_id: threadCommentTwoReplyTwo.id,
+            reply_owner_username: userTwo.username,
+            reply_date: threadCommentTwoReplyTwo.date,
+            reply_content: '**balasan telah dihapus**',
+            reply_deleted: true,
+          },
+        ]),
       );
-    });
-
-    it('should return thread detail with empty comments correctly', async () => {
-      // Arrange
-      const user = {
-        id: 'user-123',
-        username: 'monne',
-      };
-
-      const thread = {
-        id: 'thread-123',
-        title: 'Thread Title',
-        body: 'Thread Body',
-        owner: user.id,
-        date: '2023-02-25T07:00:00.800Z',
-      };
-
-      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool);
-
-      await UsersTableTestHelper.addUser({...user});
-      await ThreadsTableTestHelper.addThread({...thread});
-
-      // Action
-      const threadDetail = await threadRepositoryPostgres.getThreadWithComments(thread.id);
-
-      // Assert
-      expect(threadDetail.comments).toHaveLength(0);
     });
   });
 

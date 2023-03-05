@@ -1,6 +1,4 @@
 import {jest} from '@jest/globals';
-import ThreadCommentDetail from '../../../Domains/threads/entities/ThreadCommentDetail.js';
-import ThreadCommentReplyDetail from '../../../Domains/threads/entities/ThreadCommentReplyDetail.js';
 import ThreadDetail from '../../../Domains/threads/entities/ThreadDetail.js';
 import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import GetThreadUseCase from '../GetThreadUseCase.js';
@@ -35,67 +33,47 @@ describe('GetThreadUseCase', () => {
 
   it('should orchestrating the get thread action correctly', async () => {
     // Arrange
-    const username = 'monne';
     const threadId = 'thread-123';
-    const title = 'Thread Title';
-    const body = 'Thread Body';
-    const threadDate = '2023-02-26T07:00:00.800Z';
 
     const useCaseParams = {
       threadId,
     };
 
-    const threadComments = [
-      new ThreadCommentDetail({
-        id: 'thread-comment-123',
-        username,
-        date: '2023-02-26T08:00:00.800Z',
-        content: 'comment content',
-        is_delete: false,
-        replies: [
-          new ThreadCommentReplyDetail({
-            id: 'thread-comment-reply-123',
-            username: username,
-            date: '2023-02-26T08:10:00.800Z',
-            content: 'reply comment 1',
-            is_delete: true,
-          }),
-          new ThreadCommentReplyDetail({
-            id: 'thread-comment-reply-234',
-            username: username,
-            date: '2023-02-26T08:20:00.800Z',
-            content: 'reply comment 2',
-            is_delete: false,
-          }),
-        ],
-      }),
-      new ThreadCommentDetail({
-        id: 'thread-comment-234',
-        username,
-        date: '2023-02-26T08:30:00.800Z',
-        content: 'comment content 2',
-        is_delete: true,
-        replies: [],
-      }),
+    // Arrange
+    const thread = {
+      thread_id: threadId,
+      thread_title: 'Thread Title',
+      thread_body: 'Thread Body',
+      thread_date: '2023-02-25T07:00:00.800Z',
+      thread_owner_username: 'user-123',
+    };
+
+    const comment = {
+      comment_id: 'thread-comment-123',
+      comment_owner_username: 'user-123',
+      comment_date: '2023-02-25T08:00:00.800Z',
+      comment_content: 'comment content one',
+      comment_deleted: true,
+    };
+
+    const commentReply = {
+      reply_id: 'thread-comment-reply-123',
+      reply_owner_username: 'user-234',
+      reply_date: '2023-02-25T08:10:00.800Z',
+      reply_content: 'reply one comment two',
+      reply_deleted: true,
+    };
+
+    const threadPayload = [
+      {
+        ...thread,
+        ...comment,
+        ...commentReply,
+      },
     ];
 
-    const mockThreadDetail = new ThreadDetail({
-      id: threadId,
-      title,
-      body,
-      date: threadDate,
-      username,
-      comments: threadComments,
-    });
-
-    const expectedThreadDetail = new ThreadDetail({
-      id: threadId,
-      title,
-      body,
-      date: threadDate,
-      username,
-      comments: threadComments,
-    });
+    const mockThreadDetail = new ThreadDetail(threadPayload);
+    const expectedThreadDetail = new ThreadDetail(threadPayload);
 
     const mockThreadRepository = new ThreadRepository();
 

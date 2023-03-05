@@ -17,6 +17,27 @@ const ThreadCommentRepliesTableTestHelper = {
     await pool.query(query);
   },
 
+  async softDeleteReply({id, threadCommentId, owner}) {
+    const query = {
+      text: `
+        UPDATE
+          thread_comment_replies
+        SET
+          is_delete = true
+        WHERE
+          id = $1 AND
+          thread_comment_id = $2 AND
+          owner = $3 AND
+          is_delete = false
+        RETURNING
+          id
+      `,
+      values: [id, threadCommentId, owner],
+    };
+
+    await pool.query(query);
+  },
+
   async findThreadCommentRepliesById(threadCommentId, id) {
     const query = {
       text: 'SELECT * FROM thread_comment_replies WHERE thread_comment_id = $1 AND id = $2',
