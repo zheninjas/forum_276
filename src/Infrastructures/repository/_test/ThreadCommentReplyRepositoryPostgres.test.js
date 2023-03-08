@@ -86,6 +86,97 @@ describe('ThreadCommentReplyRepositoryPostgres', () => {
     });
   });
 
+  describe('getRepliesByCommentIds function', () => {
+    it('should get replies by comment ids correctly', async () => {
+      // Arrange
+      const threadCommentTwo = {
+        id: 'thread-comment-234',
+        content: 'comment conten two',
+        threadId,
+        owner: userId,
+        date: '2023-02-25T07:00:00.800Z',
+      };
+
+      const threadCommentThree = {
+        id: 'thread-comment-345',
+        content: 'comment conten two',
+        threadId,
+        owner: userId,
+        date: '2023-02-25T07:00:00.800Z',
+      };
+
+      const threadCommentOneReplyOne = {
+        id: 'thread-comment-reply-123',
+        content: 'reply comment content one',
+        threadCommentId: threadCommentId,
+        owner: userId,
+        date: '2023-02-25T08:10:00.800Z',
+      };
+
+      const threadCommentTwoReplyOne = {
+        id: 'thread-comment-reply-234',
+        content: 'reply comment content two',
+        threadCommentId: threadCommentTwo.id,
+        owner: userId,
+        date: '2023-02-25T08:15:00.800Z',
+      };
+
+      const threadCommentTwoReplyTwo = {
+        id: 'thread-comment-reply-345',
+        content: 'reply two comment content two',
+        threadCommentId: threadCommentTwo.id,
+        owner: userId,
+        date: '2023-02-25T08:20:00.800Z',
+      };
+
+      const threadCommentReplyRepositoryPostgres = new ThreadCommentReplyRepositoryPostgres(pool);
+
+      await ThreadCommentsTableTestHelper.addComment({...threadCommentTwo});
+      await ThreadCommentsTableTestHelper.addComment({...threadCommentThree});
+      await ThreadCommentRepliesTableTestHelper.addReply({...threadCommentOneReplyOne});
+      await ThreadCommentRepliesTableTestHelper.addReply({...threadCommentTwoReplyOne});
+      await ThreadCommentRepliesTableTestHelper.addReply({...threadCommentTwoReplyTwo});
+      await ThreadCommentRepliesTableTestHelper.softDeleteReply({...threadCommentTwoReplyTwo});
+
+      // Action
+      const threadRepliesComments = await threadCommentReplyRepositoryPostgres.getRepliesByCommentIds([
+        threadCommentId,
+        threadCommentTwo.id,
+        threadCommentThree.id,
+      ]);
+
+      // Assert
+      expect(threadRepliesComments).toBeInstanceOf(Array);
+      expect(threadRepliesComments).toHaveLength(3);
+      expect(threadRepliesComments).toStrictEqual([
+        {
+          id: threadCommentOneReplyOne.id,
+          content: threadCommentOneReplyOne.content,
+          username,
+          date: threadCommentOneReplyOne.date,
+          thread_comment_id: threadCommentId,
+          is_delete: false,
+        },
+        {
+          id: threadCommentTwoReplyOne.id,
+          content: threadCommentTwoReplyOne.content,
+          username,
+          date: threadCommentTwoReplyOne.date,
+          thread_comment_id: threadCommentTwo.id,
+          is_delete: false,
+        },
+        {
+          id: threadCommentTwoReplyTwo.id,
+          content: threadCommentTwoReplyTwo.content,
+          username,
+          date: threadCommentTwoReplyTwo.date,
+          thread_comment_id: threadCommentTwo.id,
+          is_delete: true,
+        },
+      ]);
+    });
+  });
+
   describe('softDeleteReply function', () => {
     it('should soft delete comment reply from thread correctly', async () => {
       // Arrange

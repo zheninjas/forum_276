@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import pool from '../src/Infrastructures/database/postgres/pool';
+import pool from '../src/Infrastructures/database/postgres/pool.js';
 
 const UsersTableTestHelper = {
   async addUser({id = 'user-123', username = 'monne', password = 'secret', fullname = 'Itte Monne'}) {

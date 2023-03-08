@@ -1,6 +1,5 @@
 import NotFoundError from '../../Commons/exceptions/NotFoundError.js';
 import NewThread from '../../Domains/threads/entities/NewThread.js';
-import ThreadDetail from '../../Domains/threads/entities/ThreadDetail.js';
 import ThreadRepository from '../../Domains/threads/ThreadRepository.js';
 
 class ThreadRepositoryPostgres extends ThreadRepository {
@@ -23,52 +22,30 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     return new NewThread(rows[0]);
   }
 
-  async getThreadWithComments(threadId) {
+  async getThread(threadId) {
     const query = {
       text: `
         SELECT
-          threads.id as thread_id,
-          threads.title as thread_title,
-          threads.body as thread_body,
-          to_char(threads.date, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as thread_date,
-          thread_user.username as thread_owner_username,
-
-          comments.id as comment_id,
-          comment_user.username as comment_owner_username,
-          to_char(comments.date, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as comment_date,
-          comments.content as comment_content,
-          comments.is_delete as comment_deleted,
-
-          replies.id as reply_id,
-          reply_user.username as reply_owner_username,
-          to_char(replies.date, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as reply_date,
-          replies.content as reply_content,
-          replies.is_delete as reply_deleted
+          threads.id as id,
+          threads.title as title,
+          threads.body as body,
+          to_char(threads.date, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as date,
+          users.username as username
         FROM
           threads
-        JOIN users AS thread_user
-          ON threads.owner = thread_user.id
-        LEFT JOIN thread_comments AS comments
-          ON threads.id = comments.thread_id
-        LEFT JOIN users AS comment_user
-          ON comments.owner = comment_user.id
-        LEFT JOIN thread_comment_replies AS replies
-          ON comments.id = replies.thread_comment_id
-        LEFT JOIN users AS reply_user
-          ON replies.owner = reply_user.id
+        JOIN users
+          ON threads.owner = users.id
         WHERE
           threads.id = $1
-        GROUP BY
-          replies.id, reply_owner_username, comments.id, comment_owner_username, threads.id, thread_owner_username
         ORDER BY
-          threads.date, comments.date, replies.date
+          threads.date
       `,
       values: [threadId],
     };
 
     const {rows} = await this._pool.query(query);
 
-    return new ThreadDetail(rows);
+    return rows[0];
   }
 
   async verifyThread(threadId) {

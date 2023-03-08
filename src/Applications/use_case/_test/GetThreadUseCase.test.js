@@ -1,5 +1,9 @@
 import {jest} from '@jest/globals';
+import ThreadCommentDetail from '../../../Domains/threads/entities/ThreadCommentDetail.js';
+import ThreadCommentReplyDetail from '../../../Domains/threads/entities/ThreadCommentReplyDetail.js';
 import ThreadDetail from '../../../Domains/threads/entities/ThreadDetail.js';
+import ThreadCommentReplyRepository from '../../../Domains/threads/ThreadCommentReplyRepository.js';
+import ThreadCommentRepository from '../../../Domains/threads/ThreadCommentRepository.js';
 import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import GetThreadUseCase from '../GetThreadUseCase.js';
 
@@ -34,54 +38,64 @@ describe('GetThreadUseCase', () => {
   it('should orchestrating the get thread action correctly', async () => {
     // Arrange
     const threadId = 'thread-123';
+    const threadCommentId = 'thread-comment-123';
 
     const useCaseParams = {
       threadId,
     };
 
     // Arrange
-    const thread = {
-      thread_id: threadId,
-      thread_title: 'Thread Title',
-      thread_body: 'Thread Body',
-      thread_date: '2023-02-25T07:00:00.800Z',
-      thread_owner_username: 'user-123',
-    };
+    const thread = () => ({
+      id: threadId,
+      title: 'Thread Title',
+      body: 'Thread Body',
+      date: '2023-02-25T07:00:00.800Z',
+      username: 'user-123',
+    });
 
-    const comment = {
-      comment_id: 'thread-comment-123',
-      comment_owner_username: 'user-123',
-      comment_date: '2023-02-25T08:00:00.800Z',
-      comment_content: 'comment content one',
-      comment_deleted: true,
-    };
+    const comment = () => ({
+      id: threadCommentId,
+      username: 'user-123',
+      date: '2023-02-25T08:00:00.800Z',
+      content: 'comment content one',
+      is_delete: true,
+    });
 
-    const commentReply = {
-      reply_id: 'thread-comment-reply-123',
-      reply_owner_username: 'user-234',
-      reply_date: '2023-02-25T08:10:00.800Z',
-      reply_content: 'reply one comment two',
-      reply_deleted: true,
-    };
+    const reply = () => ({
+      id: 'thread-comment-reply-123',
+      username: 'user-234',
+      date: '2023-02-25T08:10:00.800Z',
+      content: 'reply one comment two',
+      thread_comment_id: threadCommentId,
+      is_delete: true,
+    });
 
-    const threadPayload = [
-      {
-        ...thread,
-        ...comment,
-        ...commentReply,
-      },
-    ];
-
-    const mockThreadDetail = new ThreadDetail(threadPayload);
-    const expectedThreadDetail = new ThreadDetail(threadPayload);
+    const mockThread = thread();
+    const mockComments = [comment()];
+    const mockReplies = [reply()];
+    const expectedThreadDetail = new ThreadDetail({
+      ...thread(),
+      comments: [
+        new ThreadCommentDetail({
+          ...comment(),
+          replies: [new ThreadCommentReplyDetail(reply())],
+        }),
+      ],
+    });
 
     const mockThreadRepository = new ThreadRepository();
+    const mockThreadCommentRepository = new ThreadCommentRepository();
+    const mockThreadCommentReplyRepository = new ThreadCommentReplyRepository();
 
     mockThreadRepository.verifyThread = jest.fn(() => Promise.resolve());
-    mockThreadRepository.getThreadWithComments = jest.fn(() => Promise.resolve(mockThreadDetail));
+    mockThreadRepository.getThread = jest.fn(() => Promise.resolve(mockThread));
+    mockThreadCommentRepository.getComments = jest.fn(() => Promise.resolve(mockComments));
+    mockThreadCommentReplyRepository.getRepliesByCommentIds = jest.fn(() => Promise.resolve(mockReplies));
 
     const getThreadUseCase = new GetThreadUseCase({
       threadRepository: mockThreadRepository,
+      threadCommentRepository: mockThreadCommentRepository,
+      threadCommentReplyRepository: mockThreadCommentReplyRepository,
     });
 
     // Action
@@ -90,6 +104,8 @@ describe('GetThreadUseCase', () => {
     // Assert
     expect(threadDetail).toStrictEqual(expectedThreadDetail);
     expect(mockThreadRepository.verifyThread).toBeCalledWith(threadId);
-    expect(mockThreadRepository.getThreadWithComments).toBeCalledWith(threadId);
+    expect(mockThreadRepository.getThread).toBeCalledWith(threadId);
+    expect(mockThreadCommentRepository.getComments).toBeCalledWith(threadId);
+    expect(mockThreadCommentReplyRepository.getRepliesByCommentIds).toBeCalledWith([threadCommentId]);
   });
 });

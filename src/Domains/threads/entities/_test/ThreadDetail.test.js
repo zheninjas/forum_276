@@ -3,22 +3,6 @@ import ThreadCommentReplyDetail from '../ThreadCommentReplyDetail.js';
 import ThreadDetail from '../ThreadDetail.js';
 
 describe('ThreadDetail entity', () => {
-  const emptyComment = {
-    comment_id: null,
-    comment_owner_username: null,
-    comment_date: null,
-    comment_content: null,
-    comment_deleted: null,
-  };
-
-  const emptyReply = {
-    reply_id: null,
-    reply_owner_username: null,
-    reply_date: null,
-    reply_content: null,
-    reply_deleted: null,
-  };
-
   const testThread = (threadDetail, threadPayload) => {
     expect(threadDetail).toBeInstanceOf(ThreadDetail);
     expect(threadDetail.id).toEqual(threadPayload.id);
@@ -62,292 +46,132 @@ describe('ThreadDetail entity', () => {
     });
   };
 
-  describe('normalized payload function', () => {
-    it('should return thread detail with empty comments correctly', () => {
-      // Arrange
-      const thread = {
-        thread_id: 'thread-123',
-        thread_title: 'Thread Title',
-        thread_body: 'Thread Body',
-        thread_date: '2023-02-25T07:00:00.800Z',
-        thread_owner_username: 'user-123',
-      };
-
-      const payload = [
-        {
-          ...thread,
-          ...emptyComment,
-          ...emptyReply,
-        },
-      ];
-
-      // Action
-      const newThread = new ThreadDetail(payload);
-
-      // Assert
-      testThread(newThread, {
-        id: thread.thread_id,
-        title: thread.thread_title,
-        body: thread.thread_body,
-        date: thread.thread_date,
-        username: thread.thread_owner_username,
-        comments: [],
-      });
-    });
-
-    it('should return thread detail with comments and empty replies correctly', () => {
-      // Arrange
-      const thread = {
-        thread_id: 'thread-123',
-        thread_title: 'Thread Title',
-        thread_body: 'Thread Body',
-        thread_date: '2023-02-25T07:00:00.800Z',
-        thread_owner_username: 'user-123',
-      };
-
-      const comment = {
-        comment_id: 'thread-comment-123',
-        comment_owner_username: 'user-123',
-        comment_date: '2023-02-25T08:00:00.800Z',
-        comment_content: 'comment content',
-        comment_deleted: false,
-      };
-
-      const payload = [
-        {
-          ...thread,
-          ...comment,
-          ...emptyReply,
-        },
-      ];
-
-      // Action
-      const newThread = new ThreadDetail(payload);
-
-      // Assert
-      testThread(newThread, {
-        id: thread.thread_id,
-        title: thread.thread_title,
-        body: thread.thread_body,
-        date: thread.thread_date,
-        username: thread.thread_owner_username,
-        comments: [
-          {
-            id: comment.comment_id,
-            username: comment.comment_owner_username,
-            date: comment.comment_date,
-            content: comment.comment_content,
-            replies: [],
-          },
-        ],
-      });
-    });
-
-    it('should return thread detail with comments and replies correctly', () => {
-      // Arrange
-      const thread = {
-        thread_id: 'thread-123',
-        thread_title: 'Thread Title',
-        thread_body: 'Thread Body',
-        thread_date: '2023-02-25T07:00:00.800Z',
-        thread_owner_username: 'user-123',
-      };
-
-      const comment = {
-        comment_id: 'thread-comment-123',
-        comment_owner_username: 'user-123',
-        comment_date: '2023-02-25T08:00:00.800Z',
-        comment_content: 'comment content',
-        comment_deleted: false,
-      };
-
-      const reply = {
-        reply_id: 'thread-comment-reply-123',
-        reply_owner_username: 'user-234',
-        reply_date: '2023-02-25T08:10:00.800Z',
-        reply_content: 'reply comment',
-        reply_deleted: true,
-      };
-
-      const payload = [
-        {
-          ...thread,
-          ...comment,
-          ...reply,
-        },
-      ];
-
-      // Action
-      const newThread = new ThreadDetail(payload);
-
-      // Assert
-      testThread(newThread, {
-        id: thread.thread_id,
-        title: thread.thread_title,
-        body: thread.thread_body,
-        date: thread.thread_date,
-        username: thread.thread_owner_username,
-        comments: [
-          {
-            id: comment.comment_id,
-            username: comment.comment_owner_username,
-            date: comment.comment_date,
-            content: comment.comment_content,
-            replies: [
-              {
-                id: reply.reply_id,
-                username: reply.reply_owner_username,
-                date: reply.reply_date,
-                content: '**balasan telah dihapus**',
-              },
-            ],
-          },
-        ],
-      });
-    });
-  });
-
   describe('validate payload', () => {
     it('should throw error when payload does not contain needed property', () => {
       // Arrange
       const thread = {
-        thread_id: null,
-        thread_title: 'Thread Title',
-        thread_body: 'Thread Body',
-        thread_date: '2023-02-25T07:00:00.800Z',
-        thread_owner_username: 'user-123',
+        id: null,
+        title: 'Thread Title',
+        body: 'Thread Body',
+        date: '2023-02-25T07:00:00.800Z',
+        username: 'user-123',
+        comments: [],
       };
 
-      const payload = [
-        {
-          ...thread,
-          ...emptyComment,
-          ...emptyReply,
-        },
-      ];
-
       // Action & Assert
-      expect(() => new ThreadDetail(payload)).toThrowError('THREAD_DETAIL.NOT_CONTAIN_NEEDED_PROPERTY');
+      expect(() => new ThreadDetail(thread)).toThrowError('THREAD_DETAIL.NOT_CONTAIN_NEEDED_PROPERTY');
     });
 
     it('should throw error when payload not meet data type specification', () => {
       // Arrange
       const thread = {
-        thread_id: 123,
-        thread_title: 'Thread Title',
-        thread_body: 'Thread Body',
-        thread_date: '2023-02-25T07:00:00.800Z',
-        thread_owner_username: 'user-123',
+        id: 'thread-123',
+        title: 'Thread Title',
+        body: 'Thread Body',
+        date: '2023-02-25T07:00:00.800Z',
+        username: 'user-123',
+        comments: 123,
       };
 
-      const payload = [
-        {
-          ...thread,
-          ...emptyComment,
-          ...emptyReply,
-        },
-      ];
-
       // Action & Assert
-      expect(() => new ThreadDetail(payload)).toThrowError('THREAD_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION');
+      expect(() => new ThreadDetail(thread)).toThrowError('THREAD_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION');
     });
   });
 
   it('should create ThreadDetail entity correctly', () => {
     // Arrange
     const thread = {
-      thread_id: 'thread-123',
-      thread_title: 'Thread Title',
-      thread_body: 'Thread Body',
-      thread_date: '2023-02-25T07:00:00.800Z',
-      thread_owner_username: 'user-123',
+      id: 'thread-123',
+      title: 'Thread Title',
+      body: 'Thread Body',
+      date: '2023-02-25T07:00:00.800Z',
+      username: 'user-123',
     };
 
     const commentOne = {
-      comment_id: 'thread-comment-123',
-      comment_owner_username: 'user-123',
-      comment_date: '2023-02-25T08:00:00.800Z',
-      comment_content: 'comment content one',
-      comment_deleted: true,
+      id: 'thread-comment-123',
+      username: 'user-123',
+      date: '2023-02-25T08:00:00.800Z',
+      content: 'comment content one',
+      is_delete: true,
     };
 
     const commentTwo = {
-      comment_id: 'thread-comment-234',
-      comment_owner_username: 'user-123',
-      comment_date: '2023-02-25T08:05:00.800Z',
-      comment_content: 'comment content two',
-      comment_deleted: false,
+      id: 'thread-comment-234',
+      username: 'user-123',
+      date: '2023-02-25T08:05:00.800Z',
+      content: 'comment content two',
+      is_delete: false,
     };
 
     const commentTwoReplyOne = {
-      reply_id: 'thread-comment-reply-123',
-      reply_owner_username: 'user-234',
-      reply_date: '2023-02-25T08:10:00.800Z',
-      reply_content: 'reply one comment two',
-      reply_deleted: true,
+      id: 'thread-comment-reply-123',
+      username: 'user-234',
+      date: '2023-02-25T08:10:00.800Z',
+      content: 'reply one comment two',
+      thread_comment_id: commentTwo.id,
+      is_delete: true,
     };
 
     const commentTwoReplyTwo = {
-      reply_id: 'thread-comment-reply-234',
-      reply_owner_username: 'user-123',
-      reply_date: '2023-02-25T08:10:00.800Z',
-      reply_content: 'reply two comment one',
-      reply_deleted: false,
+      id: 'thread-comment-reply-234',
+      username: 'user-123',
+      date: '2023-02-25T08:10:00.800Z',
+      content: 'reply two comment two',
+      thread_comment_id: commentTwo.id,
+      is_delete: false,
     };
 
-    const payload = [
-      {
-        ...thread,
-        ...commentOne,
-        ...emptyReply,
-      },
-      {
-        ...thread,
-        ...commentTwo,
-        ...commentTwoReplyOne,
-      },
-      {
-        ...thread,
-        ...commentTwo,
-        ...commentTwoReplyTwo,
-      },
-    ];
-
     // Action
-    const newThread = new ThreadDetail(payload);
+    const newThread = new ThreadDetail({
+      ...thread,
+      comments: [
+        new ThreadCommentDetail({
+          ...commentOne,
+          replies: [],
+        }),
+        new ThreadCommentDetail({
+          ...commentTwo,
+          replies: [
+            new ThreadCommentReplyDetail(commentTwoReplyOne),
+            new ThreadCommentReplyDetail(commentTwoReplyTwo),
+          ],
+        }),
+      ],
+    });
 
     // Assert
     testThread(newThread, {
-      id: thread.thread_id,
-      title: thread.thread_title,
-      body: thread.thread_body,
-      date: thread.thread_date,
-      username: thread.thread_owner_username,
+      id: thread.id,
+      title: thread.title,
+      body: thread.body,
+      date: thread.date,
+      username: thread.username,
       comments: [
         {
-          id: commentOne.comment_id,
-          username: commentOne.comment_owner_username,
-          date: commentOne.comment_date,
+          id: commentOne.id,
+          username: commentOne.username,
+          date: commentOne.date,
           content: '**komentar telah dihapus**',
           replies: [],
         },
         {
-          id: commentTwo.comment_id,
-          username: commentTwo.comment_owner_username,
-          date: commentTwo.comment_date,
-          content: commentTwo.comment_content,
+          id: commentTwo.id,
+          username: commentTwo.username,
+          date: commentTwo.date,
+          content: commentTwo.content,
           replies: [
             {
-              id: commentTwoReplyOne.reply_id,
-              username: commentTwoReplyOne.reply_owner_username,
-              date: commentTwoReplyOne.reply_date,
+              id: commentTwoReplyOne.id,
+              username: commentTwoReplyOne.username,
+              date: commentTwoReplyOne.date,
               content: '**balasan telah dihapus**',
             },
             {
-              id: commentTwoReplyTwo.reply_id,
-              username: commentTwoReplyTwo.reply_owner_username,
-              date: commentTwoReplyTwo.reply_date,
-              content: commentTwoReplyTwo.reply_content,
+              id: commentTwoReplyTwo.id,
+              username: commentTwoReplyTwo.username,
+              date: commentTwoReplyTwo.date,
+              content: commentTwoReplyTwo.content,
             },
           ],
         },

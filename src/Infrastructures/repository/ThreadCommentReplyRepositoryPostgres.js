@@ -23,6 +23,33 @@ class ThreadCommentReplyRepositoryPostgres extends ThreadCommentReplyRepository 
     return new NewThreadCommentReply(rows[0]);
   }
 
+  async getRepliesByCommentIds(threadCommentIds) {
+    const query = {
+      text: `
+        SELECT
+          tcr.id,
+          tcr.content,
+          tcr.thread_comment_id,
+          tcr.is_delete,
+          to_char(tcr.date, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') as date,
+          users.username
+        FROM
+          thread_comment_replies AS tcr
+        JOIN users
+          ON tcr.owner = users.id
+        WHERE
+          tcr.thread_comment_id = ANY($1)
+        ORDER BY
+          tcr.date
+      `,
+      values: [threadCommentIds],
+    };
+
+    const {rows} = await this._pool.query(query);
+
+    return rows;
+  }
+
   async softDeleteReply(removeThreadCommentReplyId) {
     const {threadCommentReplyId, threadCommentId, userId} = removeThreadCommentReplyId;
     const query = {

@@ -10,6 +10,10 @@ describe('ThreadCommentReplyRepository interface', () => {
       'THREAD_COMMENT_REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED',
     );
 
+    await expect(threadCommentReplyRepository.getRepliesByCommentIds([])).rejects.toThrowError(
+      'THREAD_COMMENT_REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED',
+    );
+
     await expect(threadCommentReplyRepository.softDeleteReply({})).rejects.toThrowError(
       'THREAD_COMMENT_REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED',
     );

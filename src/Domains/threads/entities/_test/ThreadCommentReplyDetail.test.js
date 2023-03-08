@@ -34,7 +34,7 @@ describe('ThreadCommentReplyDetail entity', () => {
   });
 
   describe('normalize content of deleted reply', () => {
-    it('should return change content as deleted message when comment reply deleted', () => {
+    it('should change content as deleted message when comment reply deleted', () => {
       // Arrange
       const payload = {
         id: 'thread-comment-reply-123',
@@ -51,7 +51,7 @@ describe('ThreadCommentReplyDetail entity', () => {
       expect(threadCommentReplyDetail.content).toStrictEqual('**balasan telah dihapus**');
     });
 
-    it('should return original content when comment reply not deleted', () => {
+    it('should persist original content when comment reply not deleted', () => {
       // Arrange
       const payload = {
         id: 'thread-comment-reply-123',

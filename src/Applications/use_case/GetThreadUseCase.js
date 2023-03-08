@@ -1,6 +1,12 @@
+import ThreadDetail from '../../Domains/threads/entities/ThreadDetail.js';
+import ThreadCommentDetail from '../../Domains/threads/entities/ThreadCommentDetail.js';
+import ThreadCommentReplyDetail from '../../Domains/threads/entities/ThreadCommentReplyDetail.js';
+
 class GetThreadUseCase {
-  constructor({threadRepository}) {
+  constructor({threadRepository, threadCommentRepository, threadCommentReplyRepository}) {
     this._threadRepository = threadRepository;
+    this._threadCommentRepository = threadCommentRepository;
+    this._threadCommentReplyRepository = threadCommentReplyRepository;
   }
 
   async execute(useCaseParams) {
@@ -10,7 +16,31 @@ class GetThreadUseCase {
 
     await this._threadRepository.verifyThread(threadId);
 
-    return await this._threadRepository.getThreadWithComments(threadId);
+    const thread = await this._threadRepository.getThread(threadId);
+    const threadComments = await this._threadCommentRepository.getComments(threadId);
+    const threadCommentsReplies = await this._threadCommentReplyRepository.getRepliesByCommentIds(
+      threadComments.flatMap(({id}) => id),
+    );
+
+    const groupRepliesByCommentId = threadCommentsReplies.reduce((comments, row) => {
+      const {thread_comment_id: commentId} = row;
+
+      comments[commentId] = comments[commentId] ?? [];
+      comments[commentId].push(new ThreadCommentReplyDetail(row));
+
+      return comments;
+    }, {});
+
+    return new ThreadDetail({
+      ...thread,
+      comments: threadComments.flatMap(
+        (comment) =>
+          new ThreadCommentDetail({
+            ...comment,
+            replies: groupRepliesByCommentId[comment.id] ?? [],
+          }),
+      ),
+    });
   }
 
   _validateParams(params) {

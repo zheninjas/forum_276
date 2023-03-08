@@ -76,6 +76,55 @@ describe('ThreadCommentRepositoryPostgres', () => {
     });
   });
 
+  describe('getComments function', () => {
+    it('should get comments correctly', async () => {
+      // Arrange
+      const threadCommentOne = {
+        id: 'thread-comment-123',
+        content: 'comment conten one',
+        threadId,
+        owner: userId,
+        date: '2023-02-25T07:00:00.800Z',
+      };
+
+      const threadCommentTwo = {
+        id: 'thread-comment-234',
+        content: 'comment conten two',
+        threadId,
+        owner: userId,
+        date: '2023-02-25T07:00:00.800Z',
+      };
+
+      const threadCommentRepositoryPostgres = new ThreadCommentRepositoryPostgres(pool);
+
+      await ThreadCommentsTableTestHelper.addComment({...threadCommentOne});
+      await ThreadCommentsTableTestHelper.addComment({...threadCommentTwo});
+      await ThreadCommentsTableTestHelper.softDeleteComment({...threadCommentTwo});
+      // Action
+      const threadComments = await threadCommentRepositoryPostgres.getComments(threadId);
+
+      // Assert
+      expect(threadComments).toBeInstanceOf(Array);
+      expect(threadComments).toHaveLength(2);
+      expect(threadComments).toStrictEqual([
+        {
+          id: threadCommentOne.id,
+          content: threadCommentOne.content,
+          username,
+          date: threadCommentOne.date,
+          is_delete: false,
+        },
+        {
+          id: threadCommentTwo.id,
+          content: threadCommentTwo.content,
+          username,
+          date: threadCommentTwo.date,
+          is_delete: true,
+        },
+      ]);
+    });
+  });
+
   describe('softDeleteComment function', () => {
     it('should soft delete comment from thread correctly', async () => {
       // Arrange
