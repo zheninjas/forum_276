@@ -62,9 +62,17 @@ describe('DomainErrorTranslator', () => {
     expect(DomainErrorTranslator.translate(new Error('INSERT_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION'))).toStrictEqual(
       new InvariantError('title dan body harus string'),
     );
+
+    expect(DomainErrorTranslator.translate(new Error('INSERT_THREAD.USER_ID_NOT_FOUND'))).toStrictEqual(
+      new InvariantError('user id tidak ditemukan'),
+    );
+
+    expect(DomainErrorTranslator.translate(new Error('INSERT_THREAD.WRONG_USER_ID_DATA_TYPE'))).toStrictEqual(
+      new InvariantError('user id harus berupa string'),
+    );
   });
 
-  it('should translate insert thread commen reply error correctly', () => {
+  it('should translate insert thread comment reply error correctly', () => {
     expect(
       DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.PAYLOAD_NOT_CONTAIN_CONTENT')),
     ).toStrictEqual(new InvariantError('harus mengirimkan content'));

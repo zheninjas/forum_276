@@ -24,18 +24,20 @@ describe('ThreadRepositoryPostgres', () => {
   describe('addThread function', () => {
     it('should add thread correctly', async () => {
       // Arrange
-      const insertThread = new InsertThread({
-        title: 'Thread Title',
-        body: 'Thread Body',
-      });
+      const userId = 'user-123';
+      const insertThread = new InsertThread(
+        'Thread Title',
+        'Thread Body',
+        userId,
+      );
 
       const fakeIdGenerator = () => '123';
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
 
-      await UsersTableTestHelper.addUser({id: 'user-123', username: 'monne'});
+      await UsersTableTestHelper.addUser({id: userId, username: 'monne'});
 
       // Action
-      await threadRepositoryPostgres.addThread(insertThread, 'user-123');
+      await threadRepositoryPostgres.addThread(insertThread);
 
       // Assert
       const threads = await ThreadsTableTestHelper.findThreadsById('thread-123');
@@ -44,25 +46,27 @@ describe('ThreadRepositoryPostgres', () => {
     });
 
     it('should return new thread correctly', async () => {
-      const insertThread = new InsertThread({
-        title: 'Thread Title',
-        body: 'Thread Body',
-      });
+      const userId = 'user-123';
+      const insertThread = new InsertThread(
+        'Thread Title',
+        'Thread Body',
+        userId,
+      );
 
       const fakeIdGenerator = () => '123';
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
 
-      await UsersTableTestHelper.addUser({id: 'user-123', username: 'monne'});
+      await UsersTableTestHelper.addUser({id: userId, username: 'monne'});
 
       // Action
-      const newThread = await threadRepositoryPostgres.addThread(insertThread, 'user-123');
+      const newThread = await threadRepositoryPostgres.addThread(insertThread);
 
       // Assert
       expect(newThread).toStrictEqual(
         new NewThread({
           id: 'thread-123',
           title: insertThread.title,
-          owner: 'user-123',
+          owner: userId,
         }),
       );
     });

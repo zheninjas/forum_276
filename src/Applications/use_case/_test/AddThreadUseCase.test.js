@@ -5,39 +5,6 @@ import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import AddThreadUseCase from '../AddThreadUseCase.js';
 
 describe('AddThreadUseCase', () => {
-  describe('_validateUserId function', () => {
-    it('should throw error if userId undefined', async () => {
-      // Arrange
-      const useCasePayload = {
-        title: 'Thread Title',
-        body: 'Thread Body',
-      };
-
-      const addThreadUseCase = new AddThreadUseCase({});
-
-      // Action & Assert
-      await expect(addThreadUseCase.execute(useCasePayload)).rejects.toThrowError(
-        'ADD_THREAD_USE_CASE.USER_ID_NOT_FOUND',
-      );
-    });
-
-    it('should throw error if userId not string', async () => {
-      // Arrange
-      const useCasePayload = {
-        title: 'Thread Title',
-        body: 'Thread Body',
-      };
-
-      const userId = 123;
-      const addThreadUseCase = new AddThreadUseCase({});
-
-      // Action & Assert
-      await expect(addThreadUseCase.execute(useCasePayload, userId)).rejects.toThrowError(
-        'ADD_THREAD_USE_CASE.WRONG_USER_ID_DATA_TYPE',
-      );
-    });
-  });
-
   it('should orchestrating the add thread action correctly', async () => {
     // Arrange
     const title = 'Thread Title';
@@ -75,12 +42,6 @@ describe('AddThreadUseCase', () => {
 
     // Assert
     expect(addedThread).toStrictEqual(expectedNewThread);
-    expect(mockThreadRepository.addThread).toBeCalledWith(
-      new InsertThread({
-        title,
-        body,
-      }),
-      userAuthId,
-    );
+    expect(mockThreadRepository.addThread).toBeCalledWith(new InsertThread(title, body, userAuthId));
   });
 });

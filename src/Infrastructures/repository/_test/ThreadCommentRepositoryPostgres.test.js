@@ -12,10 +12,11 @@ describe('ThreadCommentRepositoryPostgres', () => {
   const username = 'monne';
   const userId = 'user-123';
   const threadId = 'thread-123';
-  const insertThread = new InsertThread({
-    title: 'Thread Title',
-    body: 'Thread Body',
-  });
+  const insertThread = new InsertThread(
+    'Thread Title',
+    'Thread Body',
+    userId,
+  );
 
   beforeAll(async () => {
     await UsersTableTestHelper.addUser({username, userId});

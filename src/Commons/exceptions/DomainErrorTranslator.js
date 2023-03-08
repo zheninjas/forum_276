@@ -44,6 +44,8 @@ DomainErrorTranslator._directories = {
   // InsertThread entity
   'INSERT_THREAD.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('harus mengirimkan title dan body'),
   'INSERT_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('title dan body harus string'),
+  'INSERT_THREAD.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
+  'INSERT_THREAD.WRONG_USER_ID_DATA_TYPE': new InvariantError('user id harus berupa string'),
 
   // InsertThreadCommentReply entity
   'INSERT_THREAD_COMMENT.PAYLOAD_NOT_CONTAIN_CONTENT': new InvariantError('harus mengirimkan content'),
@@ -52,10 +54,6 @@ DomainErrorTranslator._directories = {
   'INSERT_THREAD_COMMENT.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('parameter harus berupa string'),
   'INSERT_THREAD_COMMENT.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
   'INSERT_THREAD_COMMENT.WRONG_USER_ID_DATA_TYPE': new InvariantError('user id harus berupa string'),
-
-  // AddThreadUseCase userId
-  'ADD_THREAD_USE_CASE.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
-  'ADD_THREAD_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError('user id harus berupa string'),
 
   // AddThreadCommentUseCase
   'ADD_THREAD_COMMENT_USE_CASE.PAYLOAD_NOT_CONTAIN_CONTENT': new InvariantError('harus mengirimkan content'),
