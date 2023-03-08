@@ -64,6 +64,32 @@ describe('DomainErrorTranslator', () => {
     );
   });
 
+  it('should translate insert thread commen reply error correctly', () => {
+    expect(
+      DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.PAYLOAD_NOT_CONTAIN_CONTENT')),
+    ).toStrictEqual(new InvariantError('harus mengirimkan content'));
+
+    expect(
+      DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION')),
+    ).toStrictEqual(new InvariantError('content harus string'));
+
+    expect(
+      DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY')),
+    ).toStrictEqual(new InvariantError('parameter tidak lengkap'));
+
+    expect(
+      DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION')),
+    ).toStrictEqual(new InvariantError('parameter harus berupa string'));
+
+    expect(DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.USER_ID_NOT_FOUND'))).toStrictEqual(
+      new InvariantError('user id tidak ditemukan'),
+    );
+
+    expect(DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.WRONG_USER_ID_DATA_TYPE'))).toStrictEqual(
+      new InvariantError('user id harus berupa string'),
+    );
+  });
+
   it('should translate validate payload, params, and userId error at add thread comment use case correctly', () => {
     expect(
       DomainErrorTranslator.translate(new Error('ADD_THREAD_COMMENT_USE_CASE.PAYLOAD_NOT_CONTAIN_CONTENT')),
@@ -111,39 +137,6 @@ describe('DomainErrorTranslator', () => {
       DomainErrorTranslator.translate(new Error('DELETE_THREAD_COMMENT_USE_CASE.WRONG_USER_ID_DATA_TYPE')),
     ).toStrictEqual(new InvariantError('user id harus berupa string'));
   });
-
-  it('should translate validate payload, params, and userId error at add thread comment reply use case correctly',
-    () => {
-      expect(
-        DomainErrorTranslator.translate(new Error('ADD_THREAD_COMMENT_REPLY_USE_CASE.PAYLOAD_NOT_CONTAIN_CONTENT')),
-      ).toStrictEqual(new InvariantError('harus mengirimkan content'));
-
-      expect(
-        DomainErrorTranslator.translate(
-          new Error('ADD_THREAD_COMMENT_REPLY_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION'),
-        ),
-      ).toStrictEqual(new InvariantError('content harus string'));
-
-      expect(
-        DomainErrorTranslator.translate(
-          new Error('ADD_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY'),
-        ),
-      ).toStrictEqual(new InvariantError('parameter tidak lengkap'));
-
-      expect(
-        DomainErrorTranslator.translate(
-          new Error('ADD_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION'),
-        ),
-      ).toStrictEqual(new InvariantError('parameter harus berupa string'));
-
-      expect(
-        DomainErrorTranslator.translate(new Error('ADD_THREAD_COMMENT_REPLY_USE_CASE.USER_ID_NOT_FOUND')),
-      ).toStrictEqual(new InvariantError('user id tidak ditemukan'));
-
-      expect(
-        DomainErrorTranslator.translate(new Error('ADD_THREAD_COMMENT_REPLY_USE_CASE.WRONG_USER_ID_DATA_TYPE')),
-      ).toStrictEqual(new InvariantError('user id harus berupa string'));
-    });
 
   it('should translate validate params error at delete thread comment reply use case correctly', () => {
     expect(

@@ -1,4 +1,5 @@
 import {jest} from '@jest/globals';
+import InsertThreadCommentReply from '../../../Domains/threads/entities/InsertThreadCommentReply.js';
 import NewThreadCommentReply from '../../../Domains/threads/entities/NewThreadCommentReply.js';
 import ThreadCommentReplyRepository from '../../../Domains/threads/ThreadCommentReplyRepository.js';
 import ThreadCommentRepository from '../../../Domains/threads/ThreadCommentRepository.js';
@@ -6,113 +7,6 @@ import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import AddThreadCommentReplyUseCase from '../AddThreadCommentReplyUseCase.js';
 
 describe('AddThreadCommentReplyUseCase', () => {
-  describe('_validatePayload function', () => {
-    it('should throw error if use case payload not contain content', async () => {
-      // Arrange
-      const useCasePayload = {};
-      const addThreadCommentReplyUseCase = new AddThreadCommentReplyUseCase({});
-
-      // Action & Assert
-      await expect(addThreadCommentReplyUseCase.execute(useCasePayload, {}, {})).rejects.toThrowError(
-        'ADD_THREAD_COMMENT_REPLY_USE_CASE.PAYLOAD_NOT_CONTAIN_CONTENT',
-      );
-    });
-
-    it('should throw error if content is not string', async () => {
-      // Arrange
-      const useCasePayload = {
-        content: 1,
-      };
-
-      const addThreadCommentReplyUseCase = new AddThreadCommentReplyUseCase({});
-
-      // Action & Assert
-      await expect(addThreadCommentReplyUseCase.execute(useCasePayload, {}, {})).rejects.toThrowError(
-        'ADD_THREAD_COMMENT_REPLY_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION',
-      );
-    });
-  });
-
-  describe('_validateParams function', () => {
-    it('should throw error if params not contain needed property', async () => {
-      // Arrange
-      const useCasePayload = {
-        content: 'comment content',
-      };
-
-      const useCaseParams = {
-        threadId: 'thread-123',
-      };
-
-      const addThreadCommentReplyUseCase = new AddThreadCommentReplyUseCase({});
-
-      // Action & Assert
-      await expect(addThreadCommentReplyUseCase.execute(useCasePayload, useCaseParams, {})).rejects.toThrowError(
-        'ADD_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY',
-      );
-    });
-
-    it('should throw error if params not meet data type specification', async () => {
-      // Arrange
-      const useCasePayload = {
-        content: 'comment content',
-      };
-
-      const useCaseParams = {
-        threadId: 'thread-123',
-        threadCommentId: 123,
-      };
-
-      const addThreadCommentReplyUseCase = new AddThreadCommentReplyUseCase({});
-
-      // Action & Assert
-      await expect(addThreadCommentReplyUseCase.execute(useCasePayload, useCaseParams, {})).rejects.toThrowError(
-        'ADD_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION',
-      );
-    });
-  });
-
-  describe('_validateUserId function', () => {
-    it('should throw error if userId undefined', async () => {
-      // Arrange
-      const useCasePayload = {
-        content: 'comment content',
-      };
-
-      const useCaseParams = {
-        threadId: 'thread-123',
-        threadCommentId: 'thread-comment-123',
-      };
-
-      const addThreadCommentUseCase = new AddThreadCommentReplyUseCase({});
-
-      // Action & Assert
-      await expect(addThreadCommentUseCase.execute(useCasePayload, useCaseParams)).rejects.toThrowError(
-        'ADD_THREAD_COMMENT_REPLY_USE_CASE.USER_ID_NOT_FOUND',
-      );
-    });
-
-    it('should throw error if userId not string', async () => {
-      // Arrange
-      const useCasePayload = {
-        content: 'comment content',
-      };
-
-      const useCaseParams = {
-        threadId: 'thread-123',
-        threadCommentId: 'thread-comment-123',
-      };
-
-      const userId = 123;
-      const addThreadCommentUseCase = new AddThreadCommentReplyUseCase({});
-
-      // Action & Assert
-      await expect(addThreadCommentUseCase.execute(useCasePayload, useCaseParams, userId)).rejects.toThrowError(
-        'ADD_THREAD_COMMENT_REPLY_USE_CASE.WRONG_USER_ID_DATA_TYPE',
-      );
-    });
-  });
-
   it('should orchestrating the add thread comment reply action correctly', async () => {
     // Arrange
     const userAuthId = 'user-123';
@@ -169,10 +63,11 @@ describe('AddThreadCommentReplyUseCase', () => {
     expect(addedThreadCommentReply).toStrictEqual(expectedNewThreadCommentReply);
     expect(mockThreadRepository.verifyThread).toBeCalledWith(threadId);
     expect(mockThreadCommentRepository.verifyComment).toBeCalledWith(threadCommentId, threadId);
-    expect(mockThreadCommentReplyRepository.addReply).toBeCalledWith(
-      threadCommentReplyContent,
+    expect(mockThreadCommentReplyRepository.addReply).toBeCalledWith(new InsertThreadCommentReply(
+      threadId,
       threadCommentId,
+      threadCommentReplyContent,
       userAuthId,
-    );
+    ));
   });
 });

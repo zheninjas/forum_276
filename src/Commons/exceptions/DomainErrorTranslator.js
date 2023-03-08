@@ -45,11 +45,17 @@ DomainErrorTranslator._directories = {
   'INSERT_THREAD.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('harus mengirimkan title dan body'),
   'INSERT_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('title dan body harus string'),
 
+  // InsertThreadCommentReply entity
+  'INSERT_THREAD_COMMENT.PAYLOAD_NOT_CONTAIN_CONTENT': new InvariantError('harus mengirimkan content'),
+  'INSERT_THREAD_COMMENT.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('content harus string'),
+  'INSERT_THREAD_COMMENT.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('parameter tidak lengkap'),
+  'INSERT_THREAD_COMMENT.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('parameter harus berupa string'),
+  'INSERT_THREAD_COMMENT.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
+  'INSERT_THREAD_COMMENT.WRONG_USER_ID_DATA_TYPE': new InvariantError('user id harus berupa string'),
+
   // AddThreadUseCase userId
   'ADD_THREAD_USE_CASE.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
-  'ADD_THREAD_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError(
-    'user id harus berupa string',
-  ),
+  'ADD_THREAD_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError('user id harus berupa string'),
 
   // AddThreadCommentUseCase
   'ADD_THREAD_COMMENT_USE_CASE.PAYLOAD_NOT_CONTAIN_CONTENT': new InvariantError('harus mengirimkan content'),
@@ -65,9 +71,7 @@ DomainErrorTranslator._directories = {
 
   // AddThreadCommentUseCase userId
   'ADD_THREAD_COMMENT_USE_CASE.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
-  'ADD_THREAD_COMMENT_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError(
-    'user id harus berupa string',
-  ),
+  'ADD_THREAD_COMMENT_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError('user id harus berupa string'),
 
   // DeleteThreadCommentUseCase params
   'DELETE_THREAD_COMMENT_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('parameter tidak lengkap'),
@@ -77,27 +81,7 @@ DomainErrorTranslator._directories = {
 
   // DeleteThreadCommentUseCase userId
   'DELETE_THREAD_COMMENT_USE_CASE.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
-  'DELETE_THREAD_COMMENT_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError(
-    'user id harus berupa string',
-  ),
-
-  // AddThreadCommentReplyUseCase
-  'ADD_THREAD_COMMENT_REPLY_USE_CASE.PAYLOAD_NOT_CONTAIN_CONTENT': new InvariantError('harus mengirimkan content'),
-  'ADD_THREAD_COMMENT_REPLY_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
-    'content harus string',
-  ),
-
-  // AddThreadCommentReplyUseCase params
-  'ADD_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('parameter tidak lengkap'),
-  'ADD_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
-    'parameter harus berupa string',
-  ),
-
-  // AddThreadCommentReplyUseCase userId
-  'ADD_THREAD_COMMENT_REPLY_USE_CASE.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
-  'ADD_THREAD_COMMENT_REPLY_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError(
-    'user id harus berupa string',
-  ),
+  'DELETE_THREAD_COMMENT_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError('user id harus berupa string'),
 
   // DeleteThreadCommentReplyUseCase params
   'DELETE_THREAD_COMMENT_REPLY_USE_CASE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError(
@@ -109,9 +93,7 @@ DomainErrorTranslator._directories = {
 
   // DeleteThreadCommentReplyUseCase userId
   'DELETE_THREAD_COMMENT_REPLY_USE_CASE.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
-  'DELETE_THREAD_COMMENT_REPLY_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError(
-    'user id harus berupa string',
-  ),
+  'DELETE_THREAD_COMMENT_REPLY_USE_CASE.WRONG_USER_ID_DATA_TYPE': new InvariantError('user id harus berupa string'),
 };
 
 export default DomainErrorTranslator;

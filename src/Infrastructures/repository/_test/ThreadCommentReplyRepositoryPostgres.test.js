@@ -4,6 +4,7 @@ import ThreadsTableTestHelper from '../../../../tests/ThreadsTableTestHelper.js'
 import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
 import AuthorizationError from '../../../Commons/exceptions/AuthorizationError.js';
 import NotFoundError from '../../../Commons/exceptions/NotFoundError.js';
+import InsertThreadCommentReply from '../../../Domains/threads/entities/InsertThreadCommentReply.js';
 import NewThreadCommentReply from '../../../Domains/threads/entities/NewThreadCommentReply.js';
 import pool from '../../database/postgres/pool.js';
 import ThreadCommentReplyRepositoryPostgres from '../ThreadCommentReplyRepositoryPostgres.js';
@@ -44,12 +45,13 @@ describe('ThreadCommentReplyRepositoryPostgres', () => {
       // Arrange
       const content = 'comment content reply';
       const expectedThreadCommentId = 'thread-comment-reply-123';
+      const insertThreadCommentReply = new InsertThreadCommentReply(threadId, threadCommentId, content, userId);
 
       const fakeIdGenerator = () => '123';
       const threadCommentReplyRepositoryPostgres = new ThreadCommentReplyRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
-      await threadCommentReplyRepositoryPostgres.addReply(content, threadCommentId, userId);
+      await threadCommentReplyRepositoryPostgres.addReply(insertThreadCommentReply);
 
       // Assert
       const threadCommentReplies = await ThreadCommentRepliesTableTestHelper.findThreadCommentRepliesById(
@@ -64,16 +66,13 @@ describe('ThreadCommentReplyRepositoryPostgres', () => {
       // Arrange
       const content = 'comment content reply';
       const expectedThreadCommentId = 'thread-comment-reply-123';
+      const insertThreadCommentReply = new InsertThreadCommentReply(threadId, threadCommentId, content, userId);
 
       const fakeIdGenerator = () => '123';
       const threadCommentReplyRepositoryPostgres = new ThreadCommentReplyRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
-      const newThreadCommentReply = await threadCommentReplyRepositoryPostgres.addReply(
-        content,
-        threadCommentId,
-        userId,
-      );
+      const newThreadCommentReply = await threadCommentReplyRepositoryPostgres.addReply(insertThreadCommentReply);
 
       // Assert
       expect(newThreadCommentReply).toStrictEqual(
