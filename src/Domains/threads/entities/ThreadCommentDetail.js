@@ -6,7 +6,7 @@ class ThreadCommentDetail {
 
     const {content, is_delete: isDelete} = payload;
 
-    this.content = this._verifyDeleted(content, isDelete);
+    this.content = isDelete ? '**komentar telah dihapus**' : content;
   }
 
   _validatePayload(payload) {
@@ -26,14 +26,6 @@ class ThreadCommentDetail {
     ) {
       throw new Error('THREAD_COMMENT_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
-  }
-
-  _verifyDeleted(content, isDelete) {
-    if (isDelete) {
-      return '**komentar telah dihapus**';
-    }
-
-    return content;
   }
 }
 
