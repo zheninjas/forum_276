@@ -3,7 +3,7 @@ import AuthenticationRepository from '../../../Domains/authentications/Authentic
 import LogoutUserUseCase from '../LogoutUserUseCase.js';
 
 describe('LogoutUserUseCase', () => {
-  describe('_validatePayload function', () => {
+  describe('validate payload', () => {
     it('should throw error if use case payload not contain refresh token', async () => {
       // Arrange
       const useCasePayload = {};
@@ -40,8 +40,8 @@ describe('LogoutUserUseCase', () => {
 
     const mockAuthenticationRepository = new AuthenticationRepository();
 
-    mockAuthenticationRepository.checkAvailabilityToken = jest.fn().mockImplementation(() => Promise.resolve());
-    mockAuthenticationRepository.deleteToken = jest.fn().mockImplementation(() => Promise.resolve());
+    mockAuthenticationRepository.checkAvailabilityToken = jest.fn(() => Promise.resolve());
+    mockAuthenticationRepository.deleteToken = jest.fn(() => Promise.resolve());
 
     const logoutUserUseCase = new LogoutUserUseCase({
       authenticationRepository: mockAuthenticationRepository,

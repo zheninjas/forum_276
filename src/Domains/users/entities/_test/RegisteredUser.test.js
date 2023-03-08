@@ -1,7 +1,7 @@
 import RegisteredUser from '../RegisteredUser.js';
 
 describe('a RegisteredUser entity', () => {
-  describe('_validatePayload function', () => {
+  describe('validate payload', () => {
     it('should throw error when payload did not contain needed property', () => {
       // Arrange
       const payload = {

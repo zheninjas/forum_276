@@ -40,11 +40,9 @@ describe('AddThreadCommentReplyUseCase', () => {
     const mockThreadCommentRepository = new ThreadCommentRepository();
     const mockThreadCommentReplyRepository = new ThreadCommentReplyRepository();
 
-    mockThreadRepository.verifyThread = jest.fn().mockImplementation(() => Promise.resolve());
-    mockThreadCommentRepository.verifyComment = jest.fn().mockImplementation(() => Promise.resolve());
-    mockThreadCommentReplyRepository.addReply = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve(mockNewThreadCommentReply));
+    mockThreadRepository.verifyThread = jest.fn(() => Promise.resolve());
+    mockThreadCommentRepository.verifyComment = jest.fn(() => Promise.resolve());
+    mockThreadCommentReplyRepository.addReply = jest.fn(() => Promise.resolve(mockNewThreadCommentReply));
 
     const addThreadCommentReplyUseCase = new AddThreadCommentReplyUseCase({
       threadRepository: mockThreadRepository,
@@ -63,11 +61,8 @@ describe('AddThreadCommentReplyUseCase', () => {
     expect(addedThreadCommentReply).toStrictEqual(expectedNewThreadCommentReply);
     expect(mockThreadRepository.verifyThread).toBeCalledWith(threadId);
     expect(mockThreadCommentRepository.verifyComment).toBeCalledWith(threadCommentId, threadId);
-    expect(mockThreadCommentReplyRepository.addReply).toBeCalledWith(new InsertThreadCommentReply(
-      threadId,
-      threadCommentId,
-      threadCommentReplyContent,
-      userAuthId,
-    ));
+    expect(mockThreadCommentReplyRepository.addReply).toBeCalledWith(
+      new InsertThreadCommentReply(threadId, threadCommentId, threadCommentReplyContent, userAuthId),
+    );
   });
 });

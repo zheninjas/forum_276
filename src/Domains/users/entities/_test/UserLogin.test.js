@@ -1,7 +1,7 @@
 import UserLogin from '../UserLogin.js';
 
 describe('UserLogin entity', () => {
-  describe('_validatePayload function', () => {
+  describe('validate payload', () => {
     it('should throw error when payload does not contain needed property', () => {
       // Arrange
       const payload = {

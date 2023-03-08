@@ -4,7 +4,7 @@ import AuthenticationTokenManager from '../../security/AuthenticationTokenManage
 import RefreshAuthenticationUseCase from '../RefreshAuthenticationUseCase.js';
 
 describe('RefreshAuthenticationUseCase', () => {
-  describe('_validatePayload function', () => {
+  describe('validate payload', () => {
     it('should throw error if use case payload not contain refresh token', async () => {
       // Arrange
       const useCasePayload = {};
@@ -46,15 +46,11 @@ describe('RefreshAuthenticationUseCase', () => {
     const mockAuthenticationTokenManager = new AuthenticationTokenManager();
 
     // Mocking
-    mockAuthenticationRepository.checkAvailabilityToken = jest.fn().mockImplementation(() => Promise.resolve());
-    mockAuthenticationTokenManager.verifyRefreshToken = jest.fn().mockImplementation(() => Promise.resolve());
-    mockAuthenticationTokenManager.decodePayload = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve({username, id: userId}));
+    mockAuthenticationRepository.checkAvailabilityToken = jest.fn(() => Promise.resolve());
+    mockAuthenticationTokenManager.verifyRefreshToken = jest.fn(() => Promise.resolve());
+    mockAuthenticationTokenManager.decodePayload = jest.fn(() => Promise.resolve({username, id: userId}));
 
-    mockAuthenticationTokenManager.createAccessToken = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve(newRefreshToken));
+    mockAuthenticationTokenManager.createAccessToken = jest.fn(() => Promise.resolve(newRefreshToken));
 
     // Create the use case instace
     const refreshAuthenticationUseCase = new RefreshAuthenticationUseCase({

@@ -10,7 +10,8 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
     this._idGenerator = idGenerator;
   }
 
-  async addComment(content, threadId, userId) {
+  async addComment(insertThreadComment) {
+    const {threadId, content, userId} = insertThreadComment;
     const id = `thread-comment-${this._idGenerator()}`;
     const query = {
       text: 'INSERT INTO thread_comments VALUES($1, $2, $3, $4) RETURNING id, content, owner',
@@ -22,7 +23,8 @@ class ThreadCommentRepositoryPostgres extends ThreadCommentRepository {
     return new NewThreadComment(rows[0]);
   }
 
-  async softDeleteComment(threadCommentId, threadId, userId) {
+  async softDeleteComment(removeThreadComment) {
+    const {threadCommentId, threadId, userId} = removeThreadComment;
     const query = {
       text: `
         UPDATE

@@ -23,7 +23,8 @@ class ThreadCommentReplyRepositoryPostgres extends ThreadCommentReplyRepository 
     return new NewThreadCommentReply(rows[0]);
   }
 
-  async softDeleteReply(threadCommentReplyId, threadCommentId, userId) {
+  async softDeleteReply(removeThreadCommentReplyId) {
+    const {threadCommentReplyId, threadCommentId, userId} = removeThreadCommentReplyId;
     const query = {
       text: `
         UPDATE

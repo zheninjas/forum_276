@@ -4,7 +4,9 @@ import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
 import AuthorizationError from '../../../Commons/exceptions/AuthorizationError.js';
 import NotFoundError from '../../../Commons/exceptions/NotFoundError.js';
 import InsertThread from '../../../Domains/threads/entities/InsertThread.js';
+import InsertThreadComment from '../../../Domains/threads/entities/InsertThreadComment.js';
 import NewThreadComment from '../../../Domains/threads/entities/NewThreadComment.js';
+import RemoveThreadComment from '../../../Domains/threads/entities/RemoveThreadComment.js';
 import pool from '../../database/postgres/pool.js';
 import ThreadCommentRepositoryPostgres from '../ThreadCommentRepositoryPostgres.js';
 
@@ -12,11 +14,7 @@ describe('ThreadCommentRepositoryPostgres', () => {
   const username = 'monne';
   const userId = 'user-123';
   const threadId = 'thread-123';
-  const insertThread = new InsertThread(
-    'Thread Title',
-    'Thread Body',
-    userId,
-  );
+  const insertThread = new InsertThread('Thread Title', 'Thread Body', userId);
 
   beforeAll(async () => {
     await UsersTableTestHelper.addUser({username, userId});
@@ -38,12 +36,13 @@ describe('ThreadCommentRepositoryPostgres', () => {
       // Arrange
       const content = 'comment content';
       const expectedThreadCommentId = 'thread-comment-123';
+      const insertThreadComment = new InsertThreadComment(threadId, content, userId);
 
       const fakeIdGenerator = () => '123';
       const threadCommentRepositoryPostgres = new ThreadCommentRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
-      await threadCommentRepositoryPostgres.addComment(content, threadId, userId);
+      await threadCommentRepositoryPostgres.addComment(insertThreadComment);
 
       // Assert
       const threadComments = await ThreadCommentsTableTestHelper.findThreadCommentsById(
@@ -58,12 +57,13 @@ describe('ThreadCommentRepositoryPostgres', () => {
       // Arrange
       const content = 'comment content';
       const expectedThreadCommentId = 'thread-comment-123';
+      const insertThreadComment = new InsertThreadComment(threadId, content, userId);
 
       const fakeIdGenerator = () => '123';
       const threadCommentRepositoryPostgres = new ThreadCommentRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action
-      const newThreadComment = await threadCommentRepositoryPostgres.addComment(content, threadId, userId);
+      const newThreadComment = await threadCommentRepositoryPostgres.addComment(insertThreadComment);
 
       // Assert
       expect(newThreadComment).toStrictEqual(
@@ -80,12 +80,13 @@ describe('ThreadCommentRepositoryPostgres', () => {
     it('should soft delete comment from thread correctly', async () => {
       // Arrange
       const threadCommentId = 'thread-comment-123';
+      const removeThreadComment = new RemoveThreadComment(threadId, threadCommentId, userId);
       const threadCommentRepositoryPostgres = new ThreadCommentRepositoryPostgres(pool);
 
       await ThreadCommentsTableTestHelper.addComment({id: threadCommentId});
 
       // Action
-      await threadCommentRepositoryPostgres.softDeleteComment(threadCommentId, threadId, userId);
+      await threadCommentRepositoryPostgres.softDeleteComment(removeThreadComment);
 
       // Assert
       const threadComments = await ThreadCommentsTableTestHelper.findThreadCommentsById(threadId, threadCommentId);
@@ -97,12 +98,13 @@ describe('ThreadCommentRepositoryPostgres', () => {
     it('should throw NotFoundError when delete comment failed', async () => {
       // Arrange
       const invalidThreadCommentId = 'thread-comment-xxx';
+      const removeThreadComment = new RemoveThreadComment(threadId, invalidThreadCommentId, userId);
       const threadCommentRepositoryPostgres = new ThreadCommentRepositoryPostgres(pool);
 
       // Action & Assert
-      await expect(
-        threadCommentRepositoryPostgres.softDeleteComment(invalidThreadCommentId, threadId, userId),
-      ).rejects.toThrow(NotFoundError);
+      await expect(threadCommentRepositoryPostgres.softDeleteComment(removeThreadComment)).rejects.toThrow(
+        NotFoundError,
+      );
     });
   });
 

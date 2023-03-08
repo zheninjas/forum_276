@@ -1,9 +1,9 @@
 class ThreadCommentReplyRepository {
-  async addReply(content, threadCommentId, userId) {
+  async addReply(insertThreadCommentReply) {
     throw new Error('THREAD_COMMENT_REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 
-  async softDeleteReply(threadCommentReplyId, threadCommentId, userId) {
+  async softDeleteReply(removeThreadCommentReply) {
     throw new Error('THREAD_COMMENT_REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
 

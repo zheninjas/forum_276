@@ -4,7 +4,7 @@ import ThreadRepository from '../../../Domains/threads/ThreadRepository.js';
 import GetThreadUseCase from '../GetThreadUseCase.js';
 
 describe('GetThreadUseCase', () => {
-  describe('_validateParams function', () => {
+  describe('validate params function', () => {
     it('should throw error if params not contain needed property', async () => {
       // Arrange
       const useCaseParams = {};
@@ -77,8 +77,8 @@ describe('GetThreadUseCase', () => {
 
     const mockThreadRepository = new ThreadRepository();
 
-    mockThreadRepository.verifyThread = jest.fn().mockImplementation(() => Promise.resolve());
-    mockThreadRepository.getThreadWithComments = jest.fn().mockImplementation(() => Promise.resolve(mockThreadDetail));
+    mockThreadRepository.verifyThread = jest.fn(() => Promise.resolve());
+    mockThreadRepository.getThreadWithComments = jest.fn(() => Promise.resolve(mockThreadDetail));
 
     const getThreadUseCase = new GetThreadUseCase({
       threadRepository: mockThreadRepository,

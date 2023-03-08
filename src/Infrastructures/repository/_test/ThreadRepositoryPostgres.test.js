@@ -25,11 +25,7 @@ describe('ThreadRepositoryPostgres', () => {
     it('should add thread correctly', async () => {
       // Arrange
       const userId = 'user-123';
-      const insertThread = new InsertThread(
-        'Thread Title',
-        'Thread Body',
-        userId,
-      );
+      const insertThread = new InsertThread('Thread Title', 'Thread Body', userId);
 
       const fakeIdGenerator = () => '123';
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
@@ -47,11 +43,7 @@ describe('ThreadRepositoryPostgres', () => {
 
     it('should return new thread correctly', async () => {
       const userId = 'user-123';
-      const insertThread = new InsertThread(
-        'Thread Title',
-        'Thread Body',
-        userId,
-      );
+      const insertThread = new InsertThread('Thread Title', 'Thread Body', userId);
 
       const fakeIdGenerator = () => '123';
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);

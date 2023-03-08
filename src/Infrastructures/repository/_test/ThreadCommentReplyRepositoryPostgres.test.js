@@ -6,6 +6,7 @@ import AuthorizationError from '../../../Commons/exceptions/AuthorizationError.j
 import NotFoundError from '../../../Commons/exceptions/NotFoundError.js';
 import InsertThreadCommentReply from '../../../Domains/threads/entities/InsertThreadCommentReply.js';
 import NewThreadCommentReply from '../../../Domains/threads/entities/NewThreadCommentReply.js';
+import RemoveThreadCommentReply from '../../../Domains/threads/entities/RemoveThreadCommentReply.js';
 import pool from '../../database/postgres/pool.js';
 import ThreadCommentReplyRepositoryPostgres from '../ThreadCommentReplyRepositoryPostgres.js';
 
@@ -89,12 +90,19 @@ describe('ThreadCommentReplyRepositoryPostgres', () => {
     it('should soft delete comment reply from thread correctly', async () => {
       // Arrange
       const threadCommentReplyId = 'thread-comment-reply-123';
+      const removeThreadCommentReply = new RemoveThreadCommentReply(
+        threadId,
+        threadCommentId,
+        threadCommentReplyId,
+        userId,
+      );
+
       const threadCommentReplyRepositoryPostgres = new ThreadCommentReplyRepositoryPostgres(pool);
 
       await ThreadCommentRepliesTableTestHelper.addReply({id: threadCommentReplyId});
 
       // Action
-      await threadCommentReplyRepositoryPostgres.softDeleteReply(threadCommentReplyId, threadCommentId, userId);
+      await threadCommentReplyRepositoryPostgres.softDeleteReply(removeThreadCommentReply);
 
       // Assert
       const threadCommentReplies = await ThreadCommentRepliesTableTestHelper.findThreadCommentRepliesById(
@@ -109,12 +117,19 @@ describe('ThreadCommentReplyRepositoryPostgres', () => {
     it('should throw NotFoundError when delete comment reply failed', async () => {
       // Arrange
       const invalidThreadCommentReplyId = 'thread-comment-reply-xxx';
+      const removeThreadCommentReply = new RemoveThreadCommentReply(
+        threadId,
+        threadCommentId,
+        invalidThreadCommentReplyId,
+        userId,
+      );
+
       const threadCommentReplyRepositoryPostgres = new ThreadCommentReplyRepositoryPostgres(pool);
 
       // Action & Assert
-      await expect(
-        threadCommentReplyRepositoryPostgres.softDeleteReply(invalidThreadCommentReplyId, threadCommentId, userId),
-      ).rejects.toThrow(NotFoundError);
+      await expect(threadCommentReplyRepositoryPostgres.softDeleteReply(removeThreadCommentReply)).rejects.toThrow(
+        NotFoundError,
+      );
     });
   });
 

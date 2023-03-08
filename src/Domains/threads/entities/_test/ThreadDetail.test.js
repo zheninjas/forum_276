@@ -62,7 +62,7 @@ describe('ThreadDetail entity', () => {
     });
   };
 
-  describe('_normalizePayload function', () => {
+  describe('normalized payload function', () => {
     it('should return thread detail with empty comments correctly', () => {
       // Arrange
       const thread = {
@@ -207,7 +207,7 @@ describe('ThreadDetail entity', () => {
     });
   });
 
-  describe('_validatePayload function', () => {
+  describe('validate payload', () => {
     it('should throw error when payload does not contain needed property', () => {
       // Arrange
       const thread = {

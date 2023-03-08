@@ -6,11 +6,11 @@ describe('ThreadCommentRepository interface', () => {
     const threadCommentRepository = new ThreadCommentRepository();
 
     // Action & Assert
-    await expect(threadCommentRepository.addComment('', '', '')).rejects.toThrowError(
+    await expect(threadCommentRepository.addComment({})).rejects.toThrowError(
       'THREAD_COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED',
     );
 
-    await expect(threadCommentRepository.softDeleteComment('', '', '')).rejects.toThrowError(
+    await expect(threadCommentRepository.softDeleteComment({})).rejects.toThrowError(
       'THREAD_COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED',
     );
 
