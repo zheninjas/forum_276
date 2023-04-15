@@ -86,7 +86,7 @@ describe('GetThreadUseCase', () => {
       comments: [
         new ThreadCommentDetail({
           ...comment(),
-          like_count: 5,
+          like_count: 4,
           replies: [new ThreadCommentReplyDetail(reply())],
         }),
       ],
