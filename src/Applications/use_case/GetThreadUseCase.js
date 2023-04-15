@@ -3,9 +3,10 @@ import ThreadCommentDetail from '../../Domains/threads/entities/ThreadCommentDet
 import ThreadCommentReplyDetail from '../../Domains/threads/entities/ThreadCommentReplyDetail.js';
 
 class GetThreadUseCase {
-  constructor({threadRepository, threadCommentRepository, threadCommentReplyRepository}) {
+  constructor({threadRepository, threadCommentRepository, threadCommentLikeRepository, threadCommentReplyRepository}) {
     this._threadRepository = threadRepository;
     this._threadCommentRepository = threadCommentRepository;
+    this._threadCommentLikeRepository = threadCommentLikeRepository;
     this._threadCommentReplyRepository = threadCommentReplyRepository;
   }
 
@@ -19,6 +20,12 @@ class GetThreadUseCase {
     const thread = await this._threadRepository.getThread(threadId);
     const threadComments = await this._threadCommentRepository.getComments(threadId);
     const threadCommentIds = threadComments.flatMap(({id}) => id);
+
+    const threadCommentLikes = await this._threadCommentLikeRepository.getLikesByCommentIds(threadCommentIds);
+    const mapThreadCommentLikes = threadCommentLikes.reduce(
+      (obj, {thread_comment_id: threadCommentId, like_count: likeCount}) => ({...obj, [threadCommentId]: likeCount}),
+      {},
+    );
 
     const threadCommentsReplies = await this._threadCommentReplyRepository.getRepliesByCommentIds(threadCommentIds);
     const groupRepliesByCommentId = threadCommentsReplies.reduce((comments, row) => {
@@ -36,6 +43,7 @@ class GetThreadUseCase {
         (comment) =>
           new ThreadCommentDetail({
             ...comment,
+            like_count: mapThreadCommentLikes[comment.id] ?? 0,
             replies: groupRepliesByCommentId[comment.id] ?? [],
           }),
       ),

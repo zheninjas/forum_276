@@ -98,8 +98,8 @@ container.register([
     },
   },
   {
-    key: ThreadCommentReplyRepository.name,
-    Class: ThreadCommentReplyRepositoryPostgres,
+    key: ThreadCommentLikeRepository.name,
+    Class: ThreadCommentLikeRepositoryPostgres,
     parameter: {
       dependencies: [
         {
@@ -112,8 +112,8 @@ container.register([
     },
   },
   {
-    key: ThreadCommentLikeRepository.name,
-    Class: ThreadCommentLikeRepositoryPostgres,
+    key: ThreadCommentReplyRepository.name,
+    Class: ThreadCommentReplyRepositoryPostgres,
     parameter: {
       dependencies: [
         {
@@ -249,6 +249,10 @@ container.register([
         {
           name: 'threadCommentRepository',
           internal: ThreadCommentRepository.name,
+        },
+        {
+          name: 'threadCommentLikeRepository',
+          internal: ThreadCommentLikeRepository.name,
         },
         {
           name: 'threadCommentReplyRepository',

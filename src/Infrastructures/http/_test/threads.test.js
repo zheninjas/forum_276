@@ -1,4 +1,5 @@
 import AuthenticationsTableTestHelper from '../../../../tests/AuthenticationsTableTestHelper.js';
+import ThreadCommentLikesTableTestHelper from '../../../../tests/ThreadCommentLikesTableTestHelper.js';
 import ThreadCommentsTableTestHelper from '../../../../tests/ThreadCommentsTableTestHelper.js';
 import ThreadsTableTestHelper from '../../../../tests/ThreadsTableTestHelper.js';
 import UsersTableTestHelper from '../../../../tests/UsersTableTestHelper.js';
@@ -69,6 +70,14 @@ describe('/threads endpoint', () => {
     return threadCommentId;
   };
 
+  const addCommentLike = async (server, authHeader, {threadId, threadCommentId}) => {
+    await server.inject({
+      method: 'PUT',
+      url: `/threads/${threadId}/comments/${threadCommentId}/likes`,
+      headers: authHeader,
+    });
+  };
+
   const addReply = async (server, authHeader, {threadId, threadCommentId}, payload) => {
     const response = await server.inject({
       method: 'POST',
@@ -77,7 +86,6 @@ describe('/threads endpoint', () => {
       payload: payload,
     });
 
-    // Assert
     const {
       data: {
         addedReply: {id: threadCommentReplyId},
@@ -92,10 +100,11 @@ describe('/threads endpoint', () => {
   });
 
   afterEach(async () => {
+    await ThreadCommentLikesTableTestHelper.cleanTable();
+    await ThreadCommentsTableTestHelper.cleanTable();
+    await ThreadsTableTestHelper.cleanTable();
     await AuthenticationsTableTestHelper.cleanTable();
     await UsersTableTestHelper.cleanTable();
-    await ThreadsTableTestHelper.cleanTable();
-    await ThreadCommentsTableTestHelper.cleanTable();
   });
 
   describe('when POST /threads', () => {
@@ -282,6 +291,9 @@ describe('/threads endpoint', () => {
       // Add comment
       const threadCommentId = await addComment(server, authHeader, {threadId}, {content: commentContent});
 
+      // Add like
+      await addCommentLike(server, authHeader, {threadId, threadCommentId});
+
       // Action
       const response = await server.inject({
         method: 'GET',
@@ -312,6 +324,7 @@ describe('/threads endpoint', () => {
         username,
         date: expect.any(String),
         content: commentContent,
+        likeCount: 1,
         replies: [],
       });
     });
@@ -365,6 +378,7 @@ describe('/threads endpoint', () => {
         username,
         date: expect.any(String),
         content: '**komentar telah dihapus**',
+        likeCount: 0,
         replies: [],
       });
     });
@@ -401,7 +415,7 @@ describe('/threads endpoint', () => {
       expect(responseJson.data.thread.comments).toHaveLength(0);
     });
 
-    it('should response 200 and thread with comments and replies', async () => {
+    it('should response 200 and thread with comment replies', async () => {
       // Arrange
       const username = 'monne';
       const password = 'secret';

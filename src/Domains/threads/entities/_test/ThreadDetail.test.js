@@ -94,6 +94,7 @@ describe('ThreadDetail entity', () => {
       date: '2023-02-25T08:00:00.800Z',
       content: 'comment content one',
       is_delete: true,
+      like_count: 0,
     };
 
     const commentTwo = {
@@ -102,6 +103,7 @@ describe('ThreadDetail entity', () => {
       date: '2023-02-25T08:05:00.800Z',
       content: 'comment content two',
       is_delete: false,
+      like_count: 0,
     };
 
     const commentTwoReplyOne = {

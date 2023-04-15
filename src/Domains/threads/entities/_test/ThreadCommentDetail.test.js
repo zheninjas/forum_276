@@ -22,6 +22,7 @@ describe('ThreadCommentDetail entity', () => {
         content: 'comment content',
         date: 1233145235,
         is_delete: false,
+        like_count: 0,
         replies: [],
       };
 
@@ -41,6 +42,7 @@ describe('ThreadCommentDetail entity', () => {
         content: 'comment content',
         date: '2023-02-26T07:00:00.800Z',
         is_delete: true,
+        like_count: 0,
         replies: [],
       };
 
@@ -59,6 +61,7 @@ describe('ThreadCommentDetail entity', () => {
         content: 'comment content',
         date: '2023-02-26T07:00:00.800Z',
         is_delete: false,
+        like_count: 0,
         replies: [],
       };
 
@@ -78,6 +81,7 @@ describe('ThreadCommentDetail entity', () => {
       content: 'comment content',
       date: '2023-02-26T07:00:00.800Z',
       is_delete: false,
+      like_count: 0,
       replies: [],
     };
 
