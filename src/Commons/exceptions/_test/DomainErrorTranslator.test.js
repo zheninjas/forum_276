@@ -102,20 +102,20 @@ describe('DomainErrorTranslator', () => {
 
   it('should translate insert thread comment error correctly', () => {
     expect(
-      DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.PAYLOAD_NOT_CONTAIN_CONTENT')),
-    ).toStrictEqual(new InvariantError('harus mengirimkan content'));
-
-    expect(
-      DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION')),
-    ).toStrictEqual(new InvariantError('content harus string'));
-
-    expect(
       DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.PARAMS_NOT_CONTAIN_THREAD_ID')),
     ).toStrictEqual(new InvariantError('tidak terdapat thread id pada parameter'));
 
     expect(
       DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION')),
     ).toStrictEqual(new InvariantError('thread id harus berupa string'));
+
+    expect(
+      DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.PAYLOAD_NOT_CONTAIN_CONTENT')),
+    ).toStrictEqual(new InvariantError('harus mengirimkan content'));
+
+    expect(
+      DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION')),
+    ).toStrictEqual(new InvariantError('content harus string'));
 
     expect(DomainErrorTranslator.translate(new Error('INSERT_THREAD_COMMENT.USER_ID_NOT_FOUND'))).toStrictEqual(
       new InvariantError('user id tidak ditemukan'),
@@ -159,6 +159,24 @@ describe('DomainErrorTranslator', () => {
 
     expect(
       DomainErrorTranslator.translate(new Error('REMOVE_THREAD_COMMENT_REPLY.WRONG_USER_ID_DATA_TYPE')),
+    ).toStrictEqual(new InvariantError('user id harus berupa string'));
+  });
+
+  it('should translate toggle thread comment like error correctly', () => {
+    expect(
+      DomainErrorTranslator.translate(new Error('TOGGLE_THREAD_COMMENT_LIKE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY')),
+    ).toStrictEqual(new InvariantError('parameter tidak lengkap'));
+
+    expect(
+      DomainErrorTranslator.translate(new Error('TOGGLE_THREAD_COMMENT_LIKE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION')),
+    ).toStrictEqual(new InvariantError('parameter harus berupa string'));
+
+    expect(DomainErrorTranslator.translate(new Error('TOGGLE_THREAD_COMMENT_LIKE.USER_ID_NOT_FOUND'))).toStrictEqual(
+      new InvariantError('user id tidak ditemukan'),
+    );
+
+    expect(
+      DomainErrorTranslator.translate(new Error('TOGGLE_THREAD_COMMENT_LIKE.WRONG_USER_ID_DATA_TYPE')),
     ).toStrictEqual(new InvariantError('user id harus berupa string'));
   });
 

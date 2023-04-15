@@ -132,10 +132,7 @@ describe('ThreadDetail entity', () => {
         }),
         new ThreadCommentDetail({
           ...commentTwo,
-          replies: [
-            new ThreadCommentReplyDetail(commentTwoReplyOne),
-            new ThreadCommentReplyDetail(commentTwoReplyTwo),
-          ],
+          replies: [new ThreadCommentReplyDetail(commentTwoReplyOne), new ThreadCommentReplyDetail(commentTwoReplyTwo)],
         }),
       ],
     });

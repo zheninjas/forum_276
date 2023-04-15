@@ -5,6 +5,7 @@ import AddThreadUseCase from '../../../../Applications/use_case/AddThreadUseCase
 import DeleteThreadCommentUseCase from '../../../../Applications/use_case/DeleteThreadCommentUseCase.js';
 import DeleteThreadCommentReplyUseCase from '../../../../Applications/use_case/DeleteThreadCommentReplyUseCase.js';
 import GetThreadUseCase from '../../../../Applications/use_case/GetThreadUseCase.js';
+import ToggleThreadCommentLikeUseCase from '../../../../Applications/use_case/ToggleThreadCommentLikeUseCase.js';
 
 class ThreadsHandler {
   constructor(container) {
@@ -96,6 +97,17 @@ class ThreadsHandler {
     const deleteThreadCommentReplyUseCase = this._container.getInstance(DeleteThreadCommentReplyUseCase.name);
 
     await deleteThreadCommentReplyUseCase.execute(request.params, userId);
+
+    return {
+      status: 'success',
+    };
+  }
+
+  async putThreadCommentLikeHandler(request, _) {
+    const {id: userId} = request.auth.credentials;
+    const toggleThreadCommentLikeUseCase = this._container.getInstance(ToggleThreadCommentLikeUseCase.name);
+
+    await toggleThreadCommentLikeUseCase.execute(request.params, userId);
 
     return {
       status: 'success',

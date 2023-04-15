@@ -78,6 +78,14 @@ DomainErrorTranslator._directories = {
   ),
   'REMOVE_THREAD_COMMENT_REPLY.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
   'REMOVE_THREAD_COMMENT_REPLY.WRONG_USER_ID_DATA_TYPE': new InvariantError('user id harus berupa string'),
+
+  // ToggleThreadCommentLike entity
+  'TOGGLE_THREAD_COMMENT_LIKE.PARAMS_NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('parameter tidak lengkap'),
+  'TOGGLE_THREAD_COMMENT_LIKE.PARAMS_NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError(
+    'parameter harus berupa string',
+  ),
+  'TOGGLE_THREAD_COMMENT_LIKE.USER_ID_NOT_FOUND': new InvariantError('user id tidak ditemukan'),
+  'TOGGLE_THREAD_COMMENT_LIKE.WRONG_USER_ID_DATA_TYPE': new InvariantError('user id harus berupa string'),
 };
 
 export default DomainErrorTranslator;

@@ -3,8 +3,8 @@ import Jwt from '@hapi/jwt';
 import ClientError from '../../Commons/exceptions/ClientError.js';
 import DomainErrorTranslator from '../../Commons/exceptions/DomainErrorTranslator.js';
 import authentications from '../../Interfaces/http/api/authentications/index.js';
-import users from '../../Interfaces/http/api/users/index.js';
 import threads from '../../Interfaces/http/api/threads/index.js';
+import users from '../../Interfaces/http/api/users/index.js';
 
 const createServer = async (container) => {
   const server = Hapi.server({

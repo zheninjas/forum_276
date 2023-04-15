@@ -18,10 +18,9 @@ class GetThreadUseCase {
 
     const thread = await this._threadRepository.getThread(threadId);
     const threadComments = await this._threadCommentRepository.getComments(threadId);
-    const threadCommentsReplies = await this._threadCommentReplyRepository.getRepliesByCommentIds(
-      threadComments.flatMap(({id}) => id),
-    );
+    const threadCommentIds = threadComments.flatMap(({id}) => id);
 
+    const threadCommentsReplies = await this._threadCommentReplyRepository.getRepliesByCommentIds(threadCommentIds);
     const groupRepliesByCommentId = threadCommentsReplies.reduce((comments, row) => {
       const {thread_comment_id: commentId} = row;
 
