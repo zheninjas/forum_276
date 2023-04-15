@@ -11,6 +11,15 @@ const UsersTableTestHelper = {
     await pool.query(query);
   },
 
+  async deleteUser(id) {
+    const query = {
+      text: 'DELETE FROM users WHERE id = $1',
+      values: [id],
+    };
+
+    await pool.query(query);
+  },
+
   async findUsersById(id) {
     const query = {
       text: 'SELECT * FROM users WHERE id = $1',

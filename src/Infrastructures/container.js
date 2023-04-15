@@ -12,11 +12,13 @@ import pool from './database/postgres/pool.js';
 import AuthenticationTokenManager from '../Applications/security/AuthenticationTokenManager.js';
 import PasswordHash from '../Applications/security/PasswordHash.js';
 import AuthenticationRepository from '../Domains/authentications/AuthenticationRepository.js';
+import ThreadCommentLikeRepository from '../Domains/threads/ThreadCommentLikeRepository.js';
 import ThreadCommentReplyRepository from '../Domains/threads/ThreadCommentReplyRepository.js';
 import ThreadCommentRepository from '../Domains/threads/ThreadCommentRepository.js';
 import ThreadRepository from '../Domains/threads/ThreadRepository.js';
 import UserRepository from '../Domains/users/UserRepository.js';
 import AuthenticationRepositoryPostgres from './repository/AuthenticationRepositoryPostgres.js';
+import ThreadCommentLikeRepositoryPostgres from './repository/ThreadCommentLikeRepositoryPostgres.js';
 import ThreadCommentReplyRepositoryPostgres from './repository/ThreadCommentReplyRepositoryPostgres.js';
 import ThreadCommentRepositoryPostgres from './repository/ThreadCommentRepositoryPostgres.js';
 import ThreadRepositoryPostgres from './repository/ThreadRepositoryPostgres.js';
@@ -35,6 +37,7 @@ import GetThreadUseCase from '../Applications/use_case/GetThreadUseCase.js';
 import LoginUserUseCase from '../Applications/use_case/LoginUserUseCase.js';
 import LogoutUserUseCase from '../Applications/use_case/LogoutUserUseCase.js';
 import RefreshAuthenticationUseCase from '../Applications/use_case/RefreshAuthenticationUseCase.js';
+import ToggleThreadCommentLikeUseCase from '../Applications/use_case/ToggleThreadCommentLikeUseCase.js';
 
 // creating container
 const container = createContainer();
@@ -97,6 +100,20 @@ container.register([
   {
     key: ThreadCommentReplyRepository.name,
     Class: ThreadCommentReplyRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: ThreadCommentLikeRepository.name,
+    Class: ThreadCommentLikeRepositoryPostgres,
     parameter: {
       dependencies: [
         {
@@ -300,6 +317,27 @@ container.register([
         {
           name: 'threadCommentReplyRepository',
           internal: ThreadCommentReplyRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: ToggleThreadCommentLikeUseCase.name,
+    Class: ToggleThreadCommentLikeUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name,
+        },
+        {
+          name: 'threadCommentRepository',
+          internal: ThreadCommentRepository.name,
+        },
+        {
+          name: 'threadCommentLikeRepository',
+          internal: ThreadCommentLikeRepository.name,
         },
       ],
     },
