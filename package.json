@@ -1,7 +1,11 @@
 {
   "name": "forum-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Forum API",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zheninjas/forum_276.git"
+  },
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -17,7 +21,7 @@
     "lint": "eslint ./src"
   },
   "keywords": [],
-  "author": "",
+  "author": "Horamie",
   "license": "ISC",
   "dependencies": {
     "@hapi/hapi": "^20.1.5",
@@ -39,5 +43,8 @@
     "jest": "^27.0.6",
     "node-pg-migrate": "^5.10.0",
     "nodemon": "^2.0.9"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
   }
 }
