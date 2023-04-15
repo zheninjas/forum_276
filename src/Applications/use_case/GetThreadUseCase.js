@@ -12,7 +12,7 @@ class GetThreadUseCase {
   async execute(useCaseParams) {
     this._validateParams(useCaseParams);
 
-    const {threadId} = useCaseParams;
+      const {threadId} = useCaseParams;
 
     await this._threadRepository.verifyThread(threadId);
 
